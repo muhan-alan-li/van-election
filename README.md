@@ -44,7 +44,9 @@ lists the positions that exist in the sources, the slate ids that state each sid
 `slatesB`), and any mayor whose own platform states one (`candidatesA` / `candidatesB`). Mayors are
 read from their own platform and never fall back to a slate. Everyone else is read from their slate.
 A stance we cannot source is `"none"`, which shows as "no stated position" — never as disagreement.
-Each question is answered Yes or No; Yes backs the sourced position. Each answer sits atop its own
+Each question is answered Yes or No, one at a time; Yes backs the sourced position. Skip leaves
+a question blank, and Back moves to the previous one. Past the last question sits a review list of
+every answer — selecting one jumps back to change it. Each answer sits atop its own
 plain column headed simply Yes or No: bullets — first what it means, then what supporters (Yes) or
 critics (No) say in `for` / `against`, reused from the reviewed slate-pillar copy. Below that, `note` states a limit readers should
 know and `learnMore` links reputable pages that explain the issue — never campaign platforms.

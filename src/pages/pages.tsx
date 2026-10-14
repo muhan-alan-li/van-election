@@ -399,12 +399,13 @@ export function MethodologyPage() {
             <p>
                 The finder asks about issues where candidates have stated a position. Answer the ones you care
                 about and skip the rest. Every candidate is listed under the office they seek, in ballot
-                order, with a note on where they line up with your answers. For mayor we read the candidate's
-                own platform. Everywhere else the position belongs to their slate, not to the candidate
-                personally. When we find no position, the candidate shows "no stated position". That is a gap
-                in our information, never a disagreement. Each question lays out both answers: what Yes means
-                and what supporters say for it, what No means and what critics say against it, plus links to
-                official pages that explain the issue.
+                order, with a note on where they line up with your answers. Questions come one at a time; skip
+                any you are unsure about, then review and change your answers at the end. For mayor we read
+                the candidate's own platform. Everywhere else the position belongs to their slate, not to the
+                candidate personally. When we find no position, the candidate shows "no stated position". That
+                is a gap in our information, never a disagreement. Each question lays out both answers: what
+                Yes means and what supporters say for it, what No means and what critics say against it, plus
+                links to official pages that explain the issue.
             </p>
             <p>
                 Star the names you want to keep and they are saved on your device under Shortlist, grouped by

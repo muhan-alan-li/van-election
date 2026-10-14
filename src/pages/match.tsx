@@ -147,11 +147,88 @@ function CandidateRow({ line, onOpen }: { line: Line; onOpen: (id: string) => vo
     );
 }
 
+/** Which side the voter picked, if any. One-sided "no" is stored as a rejection. */
+function pickedFor(q: Question, answers: Record<string, Answer>): Side | undefined {
+    const chosen = answers[q.id];
+    if (!chosen) return undefined;
+    if (q.options.length > 1) return chosen.want ?? undefined;
+    return chosen.want === "a" ? "a" : "b";
+}
+
+function QuestionCard({
+    q,
+    picked,
+    onPick,
+    onToggle,
+}: {
+    q: Question;
+    picked: Side | undefined;
+    onPick: (side: Side) => void;
+    onToggle: (side: Side) => void;
+}) {
+    const twoSided = q.options.length > 1;
+    const yesOpt = q.options[0];
+    const noOpt = twoSided ? q.options[1] : q.opposite!;
+    return (
+        <fieldset class="match-q">
+            <legend>{q.prompt}</legend>
+            <div class="match-yn">
+                {(["a", "b"] as Side[]).map((side) => {
+                    const yes = side === "a";
+                    const opt = yes ? yesOpt : noOpt;
+                    const points = yes ? q.for : q.against;
+                    return (
+                        <div class="match-col" key={side}>
+                            <label class="match-option match-yesno">
+                                <input
+                                    type="radio"
+                                    name={q.id}
+                                    checked={picked === side}
+                                    onChange={() => onPick(side)}
+                                    onClick={() => {
+                                        if (picked === side) onToggle(side);
+                                    }}
+                                />
+                                <span class="match-verdict">{yes ? "Yes" : "No"}</span>
+                            </label>
+                            <section
+                                class="match-analysis"
+                                aria-label={`If you answer ${yes ? "yes" : "no"}: ${opt.label}`}
+                            >
+                                <h4>{yes ? "Yes" : "No"}</h4>
+                                <ul>
+                                    <li>{opt.detail}</li>
+                                    {points.map((a, i) => (
+                                        <li key={i}>{a}</li>
+                                    ))}
+                                </ul>
+                            </section>
+                        </div>
+                    );
+                })}
+            </div>
+            <p class="match-q-meta">
+                {q.note}
+                {q.learnMore.map((s) => (
+                    <span key={s.url}>
+                        {" · Learn more: "}
+                        <SourceLink href={s.url}>{s.label}</SourceLink>
+                    </span>
+                ))}
+            </p>
+        </fieldset>
+    );
+}
+
 export function MatchPage() {
     const [answers, setAnswers] = useState<Record<string, Answer>>({});
     const [hideUnknown, setHideUnknown] = useState(false);
     const [openId, setOpenId] = useState<string | null>(null);
     const [officeTab, setOfficeTab] = useState<OfficeId>("mayor");
+    /** Which question the carousel shows. Past the last one is the answers review. */
+    const [step, setStep] = useState(0);
+    /** Jumped here from the review list: offer a way back. */
+    const [fromReview, setFromReview] = useState(false);
 
     const answeredCount = Object.keys(answers).length;
     const selected = openId ? (candidateById.get(openId) ?? null) : null;
@@ -190,76 +267,133 @@ export function MatchPage() {
         });
     };
 
+    const lastStep = QUESTIONS.length - 1;
+    const reviewing = step > lastStep;
+
+    const goStep = (i: number) => {
+        setStep(Math.max(0, Math.min(i, QUESTIONS.length)));
+        document.getElementById("match-quiz")?.scrollIntoView({ block: "start" });
+    };
+
+    const jumpFromReview = (i: number) => {
+        setFromReview(true);
+        goStep(i);
+    };
+
+    const backToReview = () => {
+        setFromReview(false);
+        goStep(QUESTIONS.length);
+    };
+
+    const current = reviewing ? null : QUESTIONS[step];
+    const currentPicked = current ? pickedFor(current, answers) : undefined;
+
+    const statusFor = (q: Question): { label: string; tone: string } => {
+        const picked = pickedFor(q, answers);
+        if (picked === "a") return { label: "Yes", tone: "match-tag-yes" };
+        if (picked === "b") return { label: "No", tone: "match-tag-no" };
+        return { label: "Skipped", tone: "match-tag-none" };
+    };
+
     return (
         <>
             <p class="eyebrow">Find candidates</p>
             <h1>What matters to you?</h1>
             <p class="lede">Answer a few questions. Skip the rest. Star the names you want to keep.</p>
 
-            <form class="match-form" onSubmit={(e) => e.preventDefault()}>
-                {QUESTIONS.map((q) => {
-                    const chosen = answers[q.id];
-                    const twoSided = q.options.length > 1;
-                    const picked: Side | undefined = !chosen
-                        ? undefined
-                        : twoSided
-                          ? (chosen.want ?? undefined)
-                          : chosen.want === "a"
-                            ? "a"
-                            : "b";
-                    const yesOpt = q.options[0];
-                    const noOpt = twoSided ? q.options[1] : q.opposite!;
-                    return (
-                        <fieldset class="match-q" key={q.id}>
-                            <legend>{q.prompt}</legend>
-                            <div class="match-yn">
-                                {(["a", "b"] as Side[]).map((side) => {
-                                    const yes = side === "a";
-                                    const opt = yes ? yesOpt : noOpt;
-                                    const points = yes ? q.for : q.against;
-                                    return (
-                                        <div class="match-col" key={side}>
-                                            <label class="match-option match-yesno">
-                                                <input
-                                                    type="radio"
-                                                    name={q.id}
-                                                    checked={picked === side}
-                                                    onChange={() => choose(q, answerFor(q, side))}
-                                                    onClick={() => {
-                                                        if (picked === side) clearAnswer(q);
-                                                    }}
-                                                />
-                                                <span class="match-verdict">{yes ? "Yes" : "No"}</span>
-                                            </label>
-                                            <section
-                                                class="match-analysis"
-                                                aria-label={`If you answer ${yes ? "yes" : "no"}: ${opt.label}`}
-                                            >
-                                                <h4>{yes ? "Yes" : "No"}</h4>
-                                                <ul>
-                                                    <li>{opt.detail}</li>
-                                                    {points.map((a, i) => (
-                                                        <li key={i}>{a}</li>
-                                                    ))}
-                                                </ul>
-                                            </section>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                            <p class="match-q-meta">
-                                {q.note}
-                                {q.learnMore.map((s) => (
-                                    <span key={s.url}>
-                                        {" · Learn more: "}
-                                        <SourceLink href={s.url}>{s.label}</SourceLink>
-                                    </span>
-                                ))}
-                            </p>
-                        </fieldset>
-                    );
-                })}
-            </form>
+            <section id="match-quiz" aria-label="Questions">
+                {!reviewing && current ? (
+                    <>
+                        <p class="quiz-count" aria-live="polite">
+                            Question {step + 1} of {QUESTIONS.length}
+                        </p>
+                        <div
+                            class="quiz-progress"
+                            role="progressbar"
+                            aria-valuenow={step + 1}
+                            aria-valuemin={1}
+                            aria-valuemax={QUESTIONS.length}
+                            aria-label={`Question ${step + 1} of ${QUESTIONS.length}`}
+                        >
+                            <div
+                                class="quiz-progress-fill"
+                                style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }}
+                            />
+                        </div>
+                        <QuestionCard
+                            key={current.id}
+                            q={current}
+                            picked={currentPicked}
+                            onPick={(side) => choose(current, answerFor(current, side))}
+                            onToggle={() => clearAnswer(current)}
+                        />
+                        <div class="quiz-nav">
+                            <button
+                                type="button"
+                                class="quiz-btn"
+                                disabled={step === 0 && !fromReview}
+                                onClick={() => {
+                                    if (step === 0 && fromReview) backToReview();
+                                    else goStep(step - 1);
+                                }}
+                            >
+                                ← Back
+                            </button>
+                            {fromReview && (
+                                <button type="button" class="quiz-btn" onClick={backToReview}>
+                                    Your answers
+                                </button>
+                            )}
+                            <span class="quiz-spacer" />
+                            <button
+                                type="button"
+                                class="quiz-btn"
+                                onClick={() => {
+                                    clearAnswer(current);
+                                    goStep(step + 1);
+                                }}
+                            >
+                                Skip
+                            </button>
+                            <button type="button" class="quiz-btn quiz-next" onClick={() => goStep(step + 1)}>
+                                {step === lastStep ? "See your answers ↓" : "Next →"}
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <h2>Your answers</h2>
+                        <p class="count" aria-live="polite">
+                            {answeredCount} of {QUESTIONS.length} answered
+                            {answeredCount < QUESTIONS.length ? " — the rest skipped" : ""}
+                        </p>
+                        <ul class="quiz-review-list">
+                            {QUESTIONS.map((q, i) => {
+                                const status = statusFor(q);
+                                return (
+                                    <li key={q.id}>
+                                        <button type="button" onClick={() => jumpFromReview(i)}>
+                                            <span class="quiz-review-topic">{q.topic}</span>
+                                            <span class={`match-tag ${status.tone}`}>{status.label}</span>
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                        <button
+                            type="button"
+                            class="quiz-btn quiz-next"
+                            onClick={() =>
+                                document
+                                    .getElementById("match-results")
+                                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                            }
+                        >
+                            Show candidates ↓
+                        </button>
+                    </>
+                )}
+            </section>
 
             <h2 id="match-results">Candidates by office</h2>
             {answeredCount === 0 ? (
