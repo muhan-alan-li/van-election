@@ -192,7 +192,7 @@ export const QUESTIONS: Question[] = [
     {
         id: "free-transit",
         topic: "Transit fares",
-        prompt: "Should transit be free for young people or for all residents?",
+        prompt: "Should transit be free for young people?",
         options: [
             {
                 label: "Yes, make it free",

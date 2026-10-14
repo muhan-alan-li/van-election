@@ -76,9 +76,10 @@ function QuestionCard({
                     const opt = yes ? yesOpt : noOpt;
                     const points = yes ? q.for : q.against;
                     return (
-                        <div class="match-col" key={side}>
-                            <label class="match-option match-yesno">
+                        <div class="match-option match-yesno" key={side}>
+                            <div class="match-choice-heading">
                                 <input
+                                    id={`${q.id}-${side}`}
                                     type="radio"
                                     name={q.id}
                                     checked={picked === side}
@@ -87,20 +88,18 @@ function QuestionCard({
                                         if (picked === side) onToggle(side);
                                     }}
                                 />
-                                <span class="match-verdict">{yes ? "Yes" : "No"}</span>
-                            </label>
-                            <section
-                                class="match-analysis"
-                                aria-label={`If you answer ${yes ? "yes" : "no"}: ${opt.label}`}
-                            >
-                                <h4>{yes ? "Yes" : "No"}</h4>
+                                <label class="match-verdict" for={`${q.id}-${side}`}>
+                                    {yes ? "Yes" : "No"}
+                                </label>
+                            </div>
+                            <div class="match-analysis">
                                 <ul>
                                     <li>{opt.detail}</li>
                                     {points.map((a, i) => (
                                         <li key={i}>{a}</li>
                                     ))}
                                 </ul>
-                            </section>
+                            </div>
                         </div>
                     );
                 })}
@@ -183,7 +182,6 @@ export function MatchPage() {
     };
 
     const current = reviewing ? null : QUESTIONS[step];
-    const currentPicked = current ? pickedFor(current, answers) : undefined;
 
     const statusFor = (q: Question): { label: string; tone: string } => {
         const picked = pickedFor(q, answers);
@@ -194,9 +192,8 @@ export function MatchPage() {
 
     return (
         <>
-            <p class="eyebrow">Find candidates</p>
             <h1>What matters to you?</h1>
-            <p class="lede">Answer a few questions. Leave the rest blank. Star the names you want to keep.</p>
+            <p class="lede">Feel free to leave any questions blank, or revisit later.</p>
 
             <section id="match-quiz" aria-label="Questions">
                 {!reviewing && current ? (
@@ -217,13 +214,23 @@ export function MatchPage() {
                                 style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }}
                             />
                         </div>
-                        <QuestionCard
-                            key={current.id}
-                            q={current}
-                            picked={currentPicked}
-                            onPick={(side) => choose(current, answerFor(current, side))}
-                            onToggle={() => clearAnswer(current)}
-                        />
+                        <div class="quiz-question-stack">
+                            {QUESTIONS.map((q, i) => (
+                                <div
+                                    key={q.id}
+                                    class={`quiz-question-slot${i === step ? " is-active" : ""}`}
+                                    aria-hidden={i !== step}
+                                    inert={i !== step}
+                                >
+                                    <QuestionCard
+                                        q={q}
+                                        picked={pickedFor(q, answers)}
+                                        onPick={(side) => choose(q, answerFor(q, side))}
+                                        onToggle={() => clearAnswer(q)}
+                                    />
+                                </div>
+                            ))}
+                        </div>
                         <div class="quiz-nav">
                             <button
                                 type="button"
@@ -258,7 +265,7 @@ export function MatchPage() {
                         <p class="count" aria-live="polite">
                             {answeredCount === QUESTIONS.length
                                 ? "All questions answered."
-                                : "Select any row to change it — blank rows stay skipped."}
+                                : "Select any topic to change your answer — skipped topics stay blank."}
                         </p>
                         <ul class="quiz-review-list">
                             {QUESTIONS.map((q, i) => {
@@ -291,7 +298,7 @@ export function MatchPage() {
             <h2 id="match-results">Candidates by office</h2>
             {answeredCount === 0 ? (
                 <p class="empty">
-                    Everyone running is listed below by office. Answer above to see who lines up with you.
+                    Everyone running is listed below by office. Answer above to see who aligns with you.
                 </p>
             ) : (
                 <>
