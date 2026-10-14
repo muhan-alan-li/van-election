@@ -235,9 +235,7 @@ export function MatchPage() {
                                                 class="match-analysis"
                                                 aria-label={`If you answer ${yes ? "yes" : "no"}: ${opt.label}`}
                                             >
-                                                <h4>
-                                                    {yes ? "Yes" : "No"} — {opt.label}
-                                                </h4>
+                                                <h4>{yes ? "Yes" : "No"}</h4>
                                                 <ul>
                                                     <li>{opt.detail}</li>
                                                     {points.map((a, i) => (

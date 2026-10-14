@@ -965,12 +965,12 @@ html:has(.claim-panel[open]) {
 
 .match-form {
     display: grid;
-    gap: 12px;
+    gap: 16px;
     margin-top: 16px;
 }
 .match-q {
     margin: 0;
-    padding: 13px 15px 12px;
+    padding: 20px 20px 18px;
     border: 1px solid var(--line);
     border-top: 2px solid var(--line2);
     border-radius: var(--radius);
@@ -979,7 +979,7 @@ html:has(.claim-panel[open]) {
 .match-q legend {
     float: left;
     width: 100%;
-    padding: 2px 0 12px;
+    padding: 2px 0 16px;
     margin: 0;
     font: 650 17px/1.35 var(--sans);
     letter-spacing: -0.015em;
@@ -1025,18 +1025,18 @@ html:has(.claim-panel[open]) {
 .match-yn {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 10px;
+    gap: 20px;
+    margin-top: 12px;
     clear: both;
 }
 .match-col {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     min-width: 0;
 }
 .match-analysis h4 {
-    margin: 0 0 4px;
+    margin: 0 0 8px;
     font-size: 14px;
     line-height: 1.4;
     color: var(--ink);
@@ -1046,19 +1046,19 @@ html:has(.claim-panel[open]) {
     padding-left: 18px;
     color: var(--ink2);
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 .match-analysis li {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 .match-analysis li:last-child {
     margin-bottom: 0;
 }
 .match-q-meta {
-    margin: 9px 0 0;
+    margin: 16px 0 0;
     color: var(--ink3);
     font-size: 12.5px;
-    line-height: 1.45;
+    line-height: 1.5;
 }
 .match-clear {
     padding: 6px 0 0;

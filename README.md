@@ -45,7 +45,7 @@ lists the positions that exist in the sources, the slate ids that state each sid
 read from their own platform and never fall back to a slate. Everyone else is read from their slate.
 A stance we cannot source is `"none"`, which shows as "no stated position" — never as disagreement.
 Each question is answered Yes or No; Yes backs the sourced position. Each answer sits atop its own
-plain column: the position name plus bullets — first what it means, then what supporters (Yes) or
+plain column headed simply Yes or No: bullets — first what it means, then what supporters (Yes) or
 critics (No) say in `for` / `against`, reused from the reviewed slate-pillar copy. Below that, `note` states a limit readers should
 know and `learnMore` links reputable pages that explain the issue — never campaign platforms.
 Every candidate is listed under the office they seek, in ballot order, with agree/disagree notes once
