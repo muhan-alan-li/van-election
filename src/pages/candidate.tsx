@@ -17,6 +17,7 @@ function IssueCard({ issue }: { issue: PlatformItem }) {
     return (
         <article class="issue">
             <h3>{issue.title}</h3>
+            {issue.scope === "slate" && <Badge tone="noev">Shared party commitment</Badge>}
             <p>
                 {issue.detail}
                 {issue.delivery ? ` ${issue.delivery}` : ""}
@@ -39,6 +40,7 @@ export function CandidatePage({ id }: { id: string }) {
         );
     const officeMeta = OFFICES.find((o) => o.id === c.office)!;
     const { analysis } = c;
+    const sharedOnly = analysis.reviewed && c.platform.every((issue) => issue.scope === "slate");
     const status = c.incumbentDetail ?? (c.incumbent ? "Incumbent" : "Challenger");
     return (
         <>
@@ -70,13 +72,15 @@ export function CandidatePage({ id }: { id: string }) {
                     <dd>
                         {analysis.reviewed ? (
                             <>
-                                <Badge tone="aligned">Reviewed</Badge> Checked against the sources on{" "}
-                                {longDate(analysis.reviewedOn)}.
+                                <Badge tone="aligned">
+                                    {sharedOnly ? "Shared platform reviewed" : "Reviewed"}
+                                </Badge>{" "}
+                                Checked against the sources on {longDate(analysis.reviewedOn)}.
                             </>
                         ) : (
                             <>
-                                <Badge tone="noev">Not reviewed</Badge> We have not read a platform for this
-                                candidate yet.
+                                <Badge tone="noev">Limited information</Badge> No individual policy detail was
+                                found in the sources reviewed.
                             </>
                         )}
                     </dd>
@@ -109,11 +113,21 @@ export function CandidatePage({ id }: { id: string }) {
                     )}
                 </>
             ) : (
-                c.platform.map((item, i) => (
-                    <p key={i}>
-                        {item.detail} <SourceLink href={item.sourceUrl}>{item.sourceLabel}</SourceLink>
-                    </p>
-                ))
+                <p>
+                    <SourceLink href={c.website ?? "https://vancouver.ca/plan-your-vote/index.aspx"}>
+                        Official candidate information
+                    </SourceLink>
+                </p>
+            )}
+            {c.furtherReading && c.furtherReading.length > 0 && (
+                <p class="src">
+                    {c.furtherReading.map((s, i) => (
+                        <span key={s.url}>
+                            {i > 0 && " · "}
+                            <SourceLink href={s.url}>{s.label}</SourceLink>
+                        </span>
+                    ))}
+                </p>
             )}
         </>
     );

@@ -1,4 +1,5 @@
 import type { Candidate } from "./types.js";
+import { withBoardProfile } from "./board-profiles.js";
 
 const P = "https://vancouver.ca/plan-your-vote/index.aspx";
 
@@ -47,7 +48,7 @@ function slug(name: string): string {
         .replace(/(^-|-$)/g, "");
 }
 
-export const SCHOOL: Candidate[] = ROWS.map(([ballot, name, party, note]) => ({
+export const SCHOOL: Candidate[] = ROWS.map<Candidate>(([ballot, name, party, note]) => ({
     id: `school-${slug(name)}`,
     ballot,
     name,
@@ -74,4 +75,4 @@ export const SCHOOL: Candidate[] = ROWS.map(([ballot, name, party, note]) => ({
         openQuestions: ["Individual commitments not yet separately reviewed."],
         reviewed: false,
     },
-}));
+})).map(withBoardProfile);

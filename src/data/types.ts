@@ -53,6 +53,8 @@ export interface Candidate {
     website?: string;
     platform: PlatformItem[];
     analysis: CandidateAnalysis;
+    /** Context or recordings for readers; these do not establish a policy stance. */
+    furtherReading?: { label: string; url: string }[];
 }
 
 export interface Slate {

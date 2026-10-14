@@ -74,10 +74,22 @@ paragraph over a stack of sub-headings: a section heading, one body, and no more
 ## Data
 
 - `src/data/election.ts` — election meta, offices (1 mayor + 10 council + 7 park + 9 school), slate platforms.
-- `src/data/mayor.ts` — 8 mayoral profiles with reviewed platform + analysis.
-- `src/data/council.ts` (56), `park.ts` (35), `school.ts` (31) — full roster; individual analysis pending, each links to the official source.
+- `src/data/mayor.ts` (8), `council.ts` (56) — full rosters and original platform records.
+- `src/data/park.ts` (35), `school.ts` (31) — full rosters enriched by `board-profiles.ts`.
+  All 66 have sourced profile material. Shared items carry `scope: "slate"`
+  and display that label in both profiles and drawers. Shared-only profiles say "Shared platform reviewed".
+  Review means published priorities were read against linked sources, not that delivery or campaign
+  record claims were independently verified. No questionnaire positions are inferred from these profiles.
+  New items leave arguments empty where no supporting source was reviewed.
   The fourth column of each row is a record note, not an incumbency flag: only a note starting with
   "Incumbent …" sets `incumbent`.
+- `src/data/questionnaire-records.ts` — curated summaries of published personal and party replies,
+  with a source on every item. `questionnaire-profiles.ts` merges these into the final records in `index.ts`.
+  Final coverage: 88 individual profiles (7 mayor, 39 council, 22 park, 20 school), 37 shared-only profiles,
+  and 5 basic entries (Scott Gilbert, Job Zhao, ROLLERGIRL, Eric Redmond, Guy Dubé).
+  The agreed research cutoff is October 14, 2026. Missing responses, neutral answers, abstentions and
+  declined pledges are not inferred as opposition. Climate positions outside an office's responsibilities
+  are labelled as advocacy. Debate links are viewing context, not evidence of an untranscribed position.
 - Roster source: City of Vancouver declaration of election by voting + nominated-candidates list;
   candidate cards at https://vancouver.ca/plan-your-vote/index.aspx.
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "preact/hooks";
 import { OFFICES, SLATES } from "../data/election.js";
 import { candidateHref } from "../router.js";
-import { SourceLink } from "./ui.tsx";
+import { Badge, SourceLink } from "./ui.tsx";
 import { Arguments } from "./arguments.tsx";
 import type { Candidate, Slate } from "../data/types.js";
 
@@ -16,6 +16,7 @@ function slateFor(party: string) {
 function sourcesFor(c: Candidate): { label: string; url: string }[] {
     const seen = new Map<string, string>();
     for (const item of c.platform) seen.set(item.sourceUrl, item.sourceLabel);
+    for (const source of c.furtherReading ?? []) seen.set(source.url, source.label);
     if (c.website && !seen.has(c.website)) seen.set(c.website, "Campaign website or official page");
     return [...seen].map(([url, label]) => ({ url, label }));
 }
@@ -36,21 +37,33 @@ function BriefIssue({
     delivery,
     forArgs,
     against,
+    scope,
+    sourceUrl,
+    sourceLabel,
 }: {
     title: string;
     detail: string;
     delivery?: string;
     forArgs: string[];
     against: string[];
+    scope?: "candidate" | "slate";
+    sourceUrl?: string;
+    sourceLabel?: string;
 }) {
     return (
         <section class="panel-issue">
             <h4 class="panel-issue-title">{title}</h4>
+            {scope === "slate" && <Badge tone="noev">Shared party commitment</Badge>}
             <p>
                 {detail}
                 {delivery ? ` ${delivery}` : ""}
             </p>
             <Arguments forArgs={forArgs} against={against} />
+            {sourceUrl && (
+                <p class="src">
+                    <SourceLink href={sourceUrl}>{sourceLabel ?? "Source"}</SourceLink>
+                </p>
+            )}
         </section>
     );
 }
@@ -104,6 +117,9 @@ export function CandidatePanel({ candidate, onClose }: { candidate: Candidate; o
                             delivery={issue.delivery}
                             forArgs={issue.for}
                             against={issue.against}
+                            scope={issue.scope}
+                            sourceUrl={issue.sourceUrl}
+                            sourceLabel={issue.sourceLabel}
                         />
                     ))}
                     <h3>What to check</h3>

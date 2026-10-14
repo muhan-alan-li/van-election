@@ -11,9 +11,9 @@ export const ELECTION: ElectionMeta = {
     candidateListUrl: "https://vancouver.ca/files/cov/2026-vancouver-election-candidates-list.pdf",
     planYourVoteUrl: "https://vancouver.ca/plan-your-vote/index.aspx",
     totalCandidates: 130,
-    generatedOn: "2026-10-13",
+    generatedOn: "2026-10-14",
     coverageNote:
-        "Roster from the City of Vancouver declaration of election by voting (8 mayoral, 56 council, 35 park, 31 school). Platform detail is reviewed for mayoral frontrunners and slate-level for council; park/school profiles link to official sources and are marked pending where not yet reviewed.",
+        "All 130 ballot entries are included. Profiles contain published individual priorities for 7 mayoral, 39 council, 22 park and 20 school candidates. Another 37 profiles contain only labelled shared commitments; 5 have no individual policy detail in the reviewed source set. Research closed October 14, 2026. Campaign record claims and delivery costs are not independently verified; questionnaire matching remains a separate, partial set of sourced positions.",
 };
 
 export const OFFICES: Office[] = [
