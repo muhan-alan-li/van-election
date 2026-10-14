@@ -25,6 +25,10 @@ export interface Question {
      * sources. Lets a reader say they want the opposite even though nobody campaigns on it.
      */
     opposite?: QuestionOption;
+    /** What supporters of options[0] say. One plain sentence each, from the campaign debate. */
+    for: string[];
+    /** What critics of options[0] say. */
+    against: string[];
     /** Slate ids that state options[0]. */
     slatesA: string[];
     /** Slate ids that state options[1], when a second position exists. */
@@ -58,6 +62,8 @@ export const QUESTIONS: Question[] = [
             label: "No, raise them if services need it",
             detail: "You would accept an increase to pay for services and repairs.",
         },
+        for: ["A freeze keeps bills stable for residents."],
+        against: ["A freeze means service cuts or higher costs later."],
         offices: ["mayor", "council"],
         note: "The province and the police board also shape what the city has to spend.",
         sourceLabel: "ABC Vancouver and Vancouver Liberals platforms",
@@ -66,7 +72,7 @@ export const QUESTIONS: Question[] = [
     {
         id: "supportive-housing",
         topic: "Supportive housing",
-        prompt: "Where should new supportive housing go?",
+        prompt: "Should new supportive housing go across the whole city?",
         options: [
             {
                 label: "Across the whole city",
@@ -82,6 +88,8 @@ export const QUESTIONS: Question[] = [
         candidatesA: ["pete-fry", "kareem-allam"],
         candidatesB: ["ken-sim"],
         offices: ["mayor", "council"],
+        for: ["Reversing the ban opens the whole city to new homes."],
+        against: ["Supportive housing faces neighbourhood opposition and limited provincial money."],
         note: "Supportive housing also needs provincial money and non-profit operators.",
         sourceLabel: "ABC, Green and Vancouver Liberals platforms",
         sourceUrl: "https://abcvancouver.ca/platform/",
@@ -102,6 +110,14 @@ export const QUESTIONS: Question[] = [
             label: "No, treat it as a health issue",
             detail: "You would rather the city did not ban it in public places.",
         },
+        for: [
+            "A clear ban is easier to enforce than the current rules.",
+            "Enforcing the rules restores order in public places.",
+        ],
+        against: [
+            "Drug use is a health matter, not one for city hall.",
+            "Enforcement alone does not treat addiction or reduce harm.",
+        ],
         offices: ["mayor", "council"],
         note: "Treatment and health care are provincial, so they sit outside city control.",
         sourceLabel: "ABC Vancouver and TEAM platforms",
@@ -123,6 +139,8 @@ export const QUESTIONS: Question[] = [
             label: "No, keep road space for cars",
             detail: "You would rather the city did not convert road space.",
         },
+        for: ["Giving more road space to bikes and walking cuts emissions."],
+        against: ["Removing road space makes driving slower and more frustrating."],
         offices: ["mayor", "council"],
         note: "The city controls most street changes, but not transit funding.",
         sourceLabel: "Green and Vancouver Liberals platforms",
@@ -144,6 +162,8 @@ export const QUESTIONS: Question[] = [
             label: "No, allow redevelopment",
             detail: "You would rather the city did not block these rezonings.",
         },
+        for: ["Protecting existing affordable rentals keeps current tenants housed."],
+        against: ["Blocking new development on those sites reduces housing supply."],
         offices: ["mayor", "council"],
         note: "Council controls zoning, so this sits within city power.",
         sourceLabel: "TEAM, Green, OneCity and COPE platforms",
@@ -165,6 +185,11 @@ export const QUESTIONS: Question[] = [
             label: "No, keep fares",
             detail: "You would rather the city did not make transit free.",
         },
+        for: [
+            "Free fares help young people get around the city.",
+            "Free fares remove a barrier for low-income riders.",
+        ],
+        against: ["TransLink and the province set fares, not the city."],
         offices: ["mayor", "council"],
         note: "TransLink and the province set fares, so the city cannot do this alone.",
         sourceLabel: "Vote Vancouver and Bright Future platforms",
@@ -186,6 +211,8 @@ export const QUESTIONS: Question[] = [
             label: "No, keep the plans",
             detail: "You would rather the city did not repeal them.",
         },
+        for: ["Neighbourhood planning gives residents a real voice in local change."],
+        against: ["Repealing city-wide plans delays homes the city badly needs."],
         offices: ["mayor", "council"],
         note: "The province sets housing targets the city has to meet.",
         sourceLabel: "TEAM platform",
@@ -205,6 +232,8 @@ export const QUESTIONS: Question[] = [
             label: "No, keep the fees",
             detail: "You would rather the fees stayed to help pay for upkeep.",
         },
+        for: ["Free parking makes parks and community centres easier to use."],
+        against: ["The city loses parking revenue."],
         slatesA: ["abc"],
         offices: ["park"],
         note: "The elected Park Board runs parking at parks.",
@@ -225,6 +254,8 @@ export const QUESTIONS: Question[] = [
             label: "No, keep what we have",
             detail: "You would rather the city spent the money on upkeep.",
         },
+        for: ["More park space improves life in growing neighbourhoods."],
+        against: [],
         slatesA: ["team"],
         offices: ["park"],
         note: "Park space depends on land the city already owns or can buy.",
@@ -245,6 +276,8 @@ export const QUESTIONS: Question[] = [
             label: "No, leave it to others",
             detail: "You would rather the city did not fund these programs.",
         },
+        for: ["Community food programs help residents who cannot afford groceries."],
+        against: ["The city must balance these programs against a limited budget."],
         slatesA: ["cope"],
         offices: ["park"],
         note: "Food programs are run by community groups, often on city property.",

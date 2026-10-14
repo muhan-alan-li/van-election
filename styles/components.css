@@ -1021,12 +1021,43 @@ html:has(.claim-panel[open]) {
     display: block;
     font-size: 14.5px;
 }
+.match-option strong.match-verdict {
+    font-size: 19px;
+}
+.match-option-label {
+    display: block;
+    margin-top: 1px;
+    font-size: 14.5px;
+    font-weight: 650;
+}
 .match-option-detail {
     display: block;
     margin-top: 1px;
     color: var(--ink2);
     font-size: 12.5px;
     line-height: 1.45;
+}
+/* What each side says about the sourced position. Single column: the card is narrow. */
+.match-args {
+    margin-top: 12px;
+    border-top: 1px dashed var(--line2);
+    padding-top: 4px;
+    clear: both;
+}
+.match-args .arg-cols {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 8px;
+}
+.match-args .arg-col {
+    padding: 10px 12px;
+}
+.match-args .arg-col li {
+    font-size: 13.5px;
+    margin-bottom: 6px;
+}
+.match-args .arg-col li:last-child {
+    margin-bottom: 0;
 }
 .match-q-meta {
     margin: 9px 0 0;
@@ -1221,12 +1252,12 @@ html:has(.claim-panel[open]) {
     background: var(--panel2);
 }
 
-/* Two columns of questions on wide screens, so results are not far below. */
+/* Two columns of questions on wide screens, so results are not far below.
+   Cards in a row stretch to the same height. */
 @media (min-width: 900px) {
     .match-form {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         max-width: none;
-        align-items: start;
     }
 }
 

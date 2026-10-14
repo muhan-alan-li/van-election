@@ -219,7 +219,7 @@ function sourcesFor(c: Candidate): { label: string; url: string }[] {
 
 /** One campaign promise, with the arguments on both sides. */
 /** The two sides of an issue. Both keep the same visual weight. */
-function Arguments({ forArgs, against }: { forArgs: string[]; against: string[] }) {
+export function Arguments({ forArgs, against }: { forArgs: string[]; against: string[] }) {
     if (forArgs.length === 0 && against.length === 0) return null;
     return (
         <div class="arg-cols">
@@ -402,7 +402,8 @@ export function MethodologyPage() {
                 order, with a note on where they line up with your answers. For mayor we read the candidate's
                 own platform. Everywhere else the position belongs to their slate, not to the candidate
                 personally. When we find no position, the candidate shows "no stated position". That is a gap
-                in our information, never a disagreement.
+                in our information, never a disagreement. Each question shows what supporters and critics of
+                the position say, and your answers are saved on your device.
             </p>
             <p>
                 Star the names you want to keep and they are saved on your device under Shortlist, grouped by

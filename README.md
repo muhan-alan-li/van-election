@@ -44,8 +44,10 @@ lists the positions that exist in the sources, the slate ids that state each sid
 `slatesB`), and any mayor whose own platform states one (`candidatesA` / `candidatesB`). Mayors are
 read from their own platform and never fall back to a slate. Everyone else is read from their slate.
 A stance we cannot source is `"none"`, which shows as "no stated position" — never as disagreement.
+Each question is answered Yes or No; Yes backs the sourced position. Below the choices, `for` /
+`against` carry the arguments each side makes, reused from the reviewed slate-pillar copy.
 Every candidate is listed under the office they seek, in ballot order, with agree/disagree notes once
-the reader answers. Readers star names into a shortlist (`src/shortlist.ts`, persisted to
+the reader answers. Answers persist on the device (`van26-answers` in localStorage). Readers star names into a shortlist (`src/shortlist.ts`, persisted to
 localStorage, shown at `#/shortlist` grouped by office). The finder is not a score or a ranking; keep
 it that way.
 

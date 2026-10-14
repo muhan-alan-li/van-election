@@ -1,10 +1,10 @@
-import { useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import { CANDIDATES, candidateById } from "../data/index.js";
 import { OFFICES, SLATES } from "../data/election.js";
 import { QUESTIONS, type Question } from "../data/questions.js";
 import type { Candidate, OfficeId } from "../data/types.js";
 import { SourceLink } from "../components/ui.tsx";
-import { CandidatePanel } from "./pages.tsx";
+import { Arguments, CandidatePanel } from "./pages.tsx";
 import { OfficeTabs } from "../components/office-tabs.tsx";
 import { toggleShortlist, useShortlist } from "../shortlist.js";
 
@@ -27,6 +27,29 @@ function answerFor(q: Question, side: Side): Answer {
 
 function sameAnswer(a?: Answer, b?: Answer): boolean {
     return Boolean(a && b && a.want === b.want && a.reject === b.reject);
+}
+
+const ANSWERS_KEY = "van26-answers";
+
+/** Answers saved on this device, so a voter's choices survive a reload. */
+function loadAnswers(): Record<string, Answer> {
+    try {
+        const raw = localStorage.getItem(ANSWERS_KEY);
+        if (!raw) return {};
+        const parsed: unknown = JSON.parse(raw);
+        if (typeof parsed !== "object" || parsed === null) return {};
+        const validIds = new Set(QUESTIONS.map((q) => q.id));
+        const isSide = (x: unknown): x is Side | null => x === "a" || x === "b" || x === null;
+        const out: Record<string, Answer> = {};
+        for (const [id, value] of Object.entries(parsed as Record<string, unknown>)) {
+            if (!validIds.has(id) || typeof value !== "object" || value === null) continue;
+            const { want, reject } = value as { want?: unknown; reject?: unknown };
+            if (isSide(want) && isSide(reject)) out[id] = { want, reject };
+        }
+        return out;
+    } catch {
+        return {};
+    }
 }
 
 /** Ballot affiliations that differ from the slate's published name. */
@@ -152,10 +175,18 @@ function CandidateRow({ line, onOpen }: { line: Line; onOpen: (id: string) => vo
 }
 
 export function MatchPage() {
-    const [answers, setAnswers] = useState<Record<string, Answer>>({});
+    const [answers, setAnswers] = useState<Record<string, Answer>>(loadAnswers);
     const [hideUnknown, setHideUnknown] = useState(false);
     const [openId, setOpenId] = useState<string | null>(null);
     const [officeTab, setOfficeTab] = useState<OfficeId>("mayor");
+
+    useEffect(() => {
+        try {
+            localStorage.setItem(ANSWERS_KEY, JSON.stringify(answers));
+        } catch {
+            /* private mode: answers last for this visit */
+        }
+    }, [answers]);
 
     const answeredCount = Object.keys(answers).length;
     const selected = openId ? (candidateById.get(openId) ?? null) : null;
@@ -228,42 +259,46 @@ export function MatchPage() {
                 {QUESTIONS.map((q) => {
                     const chosen = answers[q.id];
                     const twoSided = q.options.length > 1;
+                    const picked: Side | undefined = !chosen
+                        ? undefined
+                        : twoSided
+                          ? (chosen.want ?? undefined)
+                          : chosen.want === "a"
+                            ? "a"
+                            : "b";
                     return (
                         <fieldset class="match-q" key={q.id}>
                             <legend>{q.prompt}</legend>
                             <div class="match-options">
-                                {q.options.map((opt, i) => {
-                                    const side: Side = i === 0 ? "a" : "b";
+                                {(["a", "b"] as Side[]).map((side) => {
+                                    const yes = side === "a";
+                                    const opt = twoSided
+                                        ? q.options[side === "a" ? 0 : 1]
+                                        : yes
+                                          ? q.options[0]
+                                          : q.opposite!;
                                     return (
                                         <label class="match-option" key={side}>
                                             <input
                                                 type="radio"
                                                 name={q.id}
-                                                checked={chosen?.want === side}
+                                                checked={picked === side}
                                                 onChange={() => choose(q, answerFor(q, side))}
                                             />
                                             <span>
-                                                <strong>{opt.label}</strong>
+                                                <strong class="match-verdict">{yes ? "Yes" : "No"}</strong>
+                                                <span class="match-option-label">{opt.label}</span>
                                                 <span class="match-option-detail">{opt.detail}</span>
                                             </span>
                                         </label>
                                     );
                                 })}
-                                {!twoSided && q.opposite && (
-                                    <label class="match-option">
-                                        <input
-                                            type="radio"
-                                            name={q.id}
-                                            checked={chosen?.reject === "a"}
-                                            onChange={() => choose(q, answerFor(q, "b"))}
-                                        />
-                                        <span>
-                                            <strong>{q.opposite.label}</strong>
-                                            <span class="match-option-detail">{q.opposite.detail}</span>
-                                        </span>
-                                    </label>
-                                )}
                             </div>
+                            {(q.for.length > 0 || q.against.length > 0) && (
+                                <div class="match-args">
+                                    <Arguments forArgs={q.for} against={q.against} />
+                                </div>
+                            )}
                             <p class="match-q-meta">
                                 <SourceLink href={q.sourceUrl}>{q.sourceLabel}</SourceLink>
                                 {q.note ? ` · ${q.note}` : ""}
