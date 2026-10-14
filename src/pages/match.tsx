@@ -272,7 +272,6 @@ export function MatchPage() {
 
     const goStep = (i: number) => {
         setStep(Math.max(0, Math.min(i, QUESTIONS.length)));
-        document.getElementById("match-quiz")?.scrollIntoView({ block: "start" });
     };
 
     const jumpFromReview = (i: number) => {
