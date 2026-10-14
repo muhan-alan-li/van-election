@@ -403,7 +403,7 @@ export function MethodologyPage() {
                 own platform. Everywhere else the position belongs to their slate, not to the candidate
                 personally. When we find no position, the candidate shows "no stated position". That is a gap
                 in our information, never a disagreement. Each question shows what supporters and critics of
-                the position say, and your answers are saved on your device.
+                the position say.
             </p>
             <p>
                 Star the names you want to keep and they are saved on your device under Shortlist, grouped by

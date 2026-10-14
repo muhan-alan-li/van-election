@@ -47,7 +47,7 @@ A stance we cannot source is `"none"`, which shows as "no stated position" — n
 Each question is answered Yes or No; Yes backs the sourced position. Below the choices, `for` /
 `against` carry the arguments each side makes, reused from the reviewed slate-pillar copy.
 Every candidate is listed under the office they seek, in ballot order, with agree/disagree notes once
-the reader answers. Answers persist on the device (`van26-answers` in localStorage). Readers star names into a shortlist (`src/shortlist.ts`, persisted to
+the reader answers. Selecting a picked Yes or No again clears that answer. Readers star names into a shortlist (`src/shortlist.ts`, persisted to
 localStorage, shown at `#/shortlist` grouped by office). The finder is not a score or a ranking; keep
 it that way.
 

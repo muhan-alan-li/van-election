@@ -979,7 +979,7 @@ html:has(.claim-panel[open]) {
 .match-q legend {
     float: left;
     width: 100%;
-    padding: 0;
+    padding: 2px 0 12px;
     margin: 0;
     font: 650 17px/1.35 var(--sans);
     letter-spacing: -0.015em;
@@ -1017,25 +1017,28 @@ html:has(.claim-panel[open]) {
     margin: 2px 0 0;
     accent-color: var(--accent);
 }
-.match-option strong {
-    display: block;
-    font-size: 14.5px;
+/* Yes/No boxes carry no text beyond the verdict; the meaning sits below them. */
+.match-option.match-yesno {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 11px;
 }
-.match-option strong.match-verdict {
+.match-verdict {
     font-size: 19px;
-}
-.match-option-label {
-    display: block;
-    margin-top: 1px;
-    font-size: 14.5px;
     font-weight: 650;
 }
-.match-option-detail {
-    display: block;
-    margin-top: 1px;
+.match-stakes {
+    display: grid;
+    gap: 4px;
+    margin: 10px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
     color: var(--ink2);
-    font-size: 12.5px;
-    line-height: 1.45;
+    clear: both;
+}
+.match-stakes strong {
+    color: var(--ink);
 }
 /* What each side says about the sourced position. Single column: the card is narrow. */
 .match-args {
