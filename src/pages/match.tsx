@@ -4,7 +4,7 @@ import { OFFICES, SLATES } from "../data/election.js";
 import { QUESTIONS, type Question } from "../data/questions.js";
 import type { Candidate, OfficeId } from "../data/types.js";
 import { SourceLink } from "../components/ui.tsx";
-import { Arguments, CandidatePanel } from "./pages.tsx";
+import { CandidatePanel } from "./pages.tsx";
 import { OfficeTabs } from "../components/office-tabs.tsx";
 import { toggleShortlist, useShortlist } from "../shortlist.js";
 
@@ -177,15 +177,6 @@ export function MatchPage() {
         });
     }, [answers, answeredCount, hideUnknown]);
 
-    const alignedCount = useMemo(() => {
-        let n = 0;
-        for (const c of CANDIDATES) {
-            const line = lineFor(c, answers);
-            if (line.agrees.length > 0 && line.disagrees.length === 0) n += 1;
-        }
-        return n;
-    }, [answers]);
-
     const choose = (q: Question, answer: Answer) => {
         setAnswers((prev) => ({ ...prev, [q.id]: answer }));
     };
@@ -205,25 +196,6 @@ export function MatchPage() {
             <h1>What matters to you?</h1>
             <p class="lede">Answer a few questions. Skip the rest. Star the names you want to keep.</p>
 
-            {answeredCount > 0 && (
-                <div class="match-now" aria-live="polite">
-                    <span class="match-now-counts">
-                        <strong>{alignedCount}</strong> agree with you on every issue they state
-                    </span>
-                    <button
-                        type="button"
-                        class="match-jump"
-                        onClick={() =>
-                            document
-                                .getElementById("match-results")
-                                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-                        }
-                    >
-                        Show results ↓
-                    </button>
-                </div>
-            )}
-
             <form class="match-form" onSubmit={(e) => e.preventDefault()}>
                 {QUESTIONS.map((q) => {
                     const chosen = answers[q.id];
@@ -235,6 +207,8 @@ export function MatchPage() {
                           : chosen.want === "a"
                             ? "a"
                             : "b";
+                    const yesOpt = q.options[0];
+                    const noOpt = twoSided ? q.options[1] : q.opposite!;
                     return (
                         <fieldset class="match-q" key={q.id}>
                             <legend>{q.prompt}</legend>
@@ -257,23 +231,48 @@ export function MatchPage() {
                                     );
                                 })}
                             </div>
-                            <p class="match-stakes">
-                                <span>
-                                    <strong>Yes means</strong> {q.options[0].label} — {q.options[0].detail}
-                                </span>
-                                <span>
-                                    <strong>No means</strong> {(twoSided ? q.options[1] : q.opposite!).label}{" "}
-                                    — {(twoSided ? q.options[1] : q.opposite!).detail}
-                                </span>
-                            </p>
-                            {(q.for.length > 0 || q.against.length > 0) && (
-                                <div class="match-args">
-                                    <Arguments forArgs={q.for} against={q.against} />
-                                </div>
-                            )}
+                            <div class="match-sides">
+                                <section class="match-side" aria-label={`What Yes means: ${yesOpt.label}`}>
+                                    <h4>
+                                        <span class="match-tag match-tag-yes">Yes</span> {yesOpt.label}
+                                    </h4>
+                                    <p>{yesOpt.detail}</p>
+                                    {q.for.length > 0 && (
+                                        <>
+                                            <p class="match-side-why">Supporters say:</p>
+                                            <ul>
+                                                {q.for.map((a, i) => (
+                                                    <li key={i}>{a}</li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    )}
+                                </section>
+                                <section class="match-side" aria-label={`What No means: ${noOpt.label}`}>
+                                    <h4>
+                                        <span class="match-tag match-tag-no">No</span> {noOpt.label}
+                                    </h4>
+                                    <p>{noOpt.detail}</p>
+                                    {q.against.length > 0 && (
+                                        <>
+                                            <p class="match-side-why">Critics say:</p>
+                                            <ul>
+                                                {q.against.map((a, i) => (
+                                                    <li key={i}>{a}</li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    )}
+                                </section>
+                            </div>
                             <p class="match-q-meta">
-                                <SourceLink href={q.sourceUrl}>{q.sourceLabel}</SourceLink>
-                                {q.note ? ` · ${q.note}` : ""}
+                                {q.note}
+                                {q.learnMore.map((s) => (
+                                    <span key={s.url}>
+                                        {" · Learn more: "}
+                                        <SourceLink href={s.url}>{s.label}</SourceLink>
+                                    </span>
+                                ))}
                             </p>
                         </fieldset>
                     );

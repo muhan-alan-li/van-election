@@ -1028,38 +1028,52 @@ html:has(.claim-panel[open]) {
     font-size: 19px;
     font-weight: 650;
 }
-.match-stakes {
+/* Yes and No blocks: what each answer means, with what each side says. */
+.match-sides {
     display: grid;
-    gap: 4px;
-    margin: 10px 0 0;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--ink2);
-    clear: both;
-}
-.match-stakes strong {
-    color: var(--ink);
-}
-/* What each side says about the sourced position. Single column: the card is narrow. */
-.match-args {
-    margin-top: 12px;
-    border-top: 1px dashed var(--line2);
-    padding-top: 4px;
-    clear: both;
-}
-.match-args .arg-cols {
-    grid-template-columns: 1fr;
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 12px;
+    clear: both;
 }
-.match-args .arg-col {
+.match-side {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
     padding: 10px 12px;
 }
-.match-args .arg-col li {
-    font-size: 13.5px;
-    margin-bottom: 6px;
+.match-side h4 {
+    margin: 0 0 4px;
+    font-size: 14.5px;
+    line-height: 1.4;
+    color: var(--ink);
 }
-.match-args .arg-col li:last-child {
+.match-side h4 .match-tag {
+    vertical-align: 1px;
+}
+.match-side > p {
+    margin: 0;
+    color: var(--ink2);
+    font-size: 13px;
+    line-height: 1.5;
+}
+.match-side > p.match-side-why {
+    margin: 8px 0 2px;
+    color: var(--ink3);
+    font: 800 11px/1.5 var(--sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.match-side ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--ink2);
+    font-size: 13px;
+    line-height: 1.5;
+}
+.match-side li {
+    margin-bottom: 4px;
+}
+.match-side li:last-child {
     margin-bottom: 0;
 }
 .match-q-meta {
@@ -1262,40 +1276,6 @@ html:has(.claim-panel[open]) {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         max-width: none;
     }
-}
-
-/* Live tally, shown once the reader has answered something. */
-.match-now {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px 20px;
-    flex-wrap: wrap;
-    margin: 18px 0 0;
-    padding: 12px 16px;
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    background: var(--panel);
-    font-size: 14px;
-    color: var(--ink2);
-}
-.match-now strong {
-    color: var(--ink);
-    font-variant-numeric: tabular-nums;
-}
-.match-jump {
-    flex: 0 0 auto;
-    padding: 7px 12px;
-    border: 1px solid var(--line2);
-    border-radius: var(--radius);
-    background: var(--bg);
-    color: var(--link);
-    font: 600 14px var(--sans);
-    cursor: pointer;
-}
-.match-jump:hover {
-    border-color: var(--accent);
 }
 
 /* Options sit side by side; stack them only when the card gets narrow. */

@@ -402,8 +402,9 @@ export function MethodologyPage() {
                 order, with a note on where they line up with your answers. For mayor we read the candidate's
                 own platform. Everywhere else the position belongs to their slate, not to the candidate
                 personally. When we find no position, the candidate shows "no stated position". That is a gap
-                in our information, never a disagreement. Each question shows what supporters and critics of
-                the position say.
+                in our information, never a disagreement. Each question lays out both answers: what Yes means
+                and what supporters say for it, what No means and what critics say against it, plus links to
+                official pages that explain the issue.
             </p>
             <p>
                 Star the names you want to keep and they are saved on your device under Shortlist, grouped by

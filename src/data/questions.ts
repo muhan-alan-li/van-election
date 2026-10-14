@@ -41,8 +41,8 @@ export interface Question {
     offices: OfficeId[];
     /** A limit readers should know before they weigh the promise. */
     note?: string;
-    sourceLabel: string;
-    sourceUrl: string;
+    /** Reputable pages that explain the issue. Never campaign platforms. */
+    learnMore: { label: string; url: string }[];
 }
 
 export const QUESTIONS: Question[] = [
@@ -66,8 +66,12 @@ export const QUESTIONS: Question[] = [
         against: ["A freeze means service cuts or higher costs later."],
         offices: ["mayor", "council"],
         note: "The province and the police board also shape what the city has to spend.",
-        sourceLabel: "ABC Vancouver and Vancouver Liberals platforms",
-        sourceUrl: "https://abcvancouver.ca/platform/",
+        learnMore: [
+            {
+                label: "How Vancouver sets property tax",
+                url: "https://vancouver.ca/home-property-development/understand-your-notice.aspx",
+            },
+        ],
     },
     {
         id: "supportive-housing",
@@ -91,8 +95,12 @@ export const QUESTIONS: Question[] = [
         for: ["Reversing the ban opens the whole city to new homes."],
         against: ["Supportive housing faces neighbourhood opposition and limited provincial money."],
         note: "Supportive housing also needs provincial money and non-profit operators.",
-        sourceLabel: "ABC, Green and Vancouver Liberals platforms",
-        sourceUrl: "https://abcvancouver.ca/platform/",
+        learnMore: [
+            {
+                label: "What supportive housing is",
+                url: "https://www.bchousing.org/housing-assistance/housing-with-support/supportive-housing",
+            },
+        ],
     },
     {
         id: "open-drug-use",
@@ -120,8 +128,12 @@ export const QUESTIONS: Question[] = [
         ],
         offices: ["mayor", "council"],
         note: "Treatment and health care are provincial, so they sit outside city control.",
-        sourceLabel: "ABC Vancouver and TEAM platforms",
-        sourceUrl: "https://abcvancouver.ca/platform/",
+        learnMore: [
+            {
+                label: "B.C.'s drug decriminalization pilot",
+                url: "https://www2.gov.bc.ca/gov/content/overdose/decriminalization",
+            },
+        ],
     },
     {
         id: "road-space",
@@ -143,8 +155,12 @@ export const QUESTIONS: Question[] = [
         against: ["Removing road space makes driving slower and more frustrating."],
         offices: ["mayor", "council"],
         note: "The city controls most street changes, but not transit funding.",
-        sourceLabel: "Green and Vancouver Liberals platforms",
-        sourceUrl: "https://petefry.ca/",
+        learnMore: [
+            {
+                label: "How Vancouver's protected bike lanes work",
+                url: "https://vancouver.ca/streets-transportation/protected-bicycle-lanes.aspx",
+            },
+        ],
     },
     {
         id: "rental-protection",
@@ -166,8 +182,12 @@ export const QUESTIONS: Question[] = [
         against: ["Blocking new development on those sites reduces housing supply."],
         offices: ["mayor", "council"],
         note: "Council controls zoning, so this sits within city power.",
-        sourceLabel: "TEAM, Green, OneCity and COPE platforms",
-        sourceUrl: "https://www.voteteam.ca/candidates-2026/colleen-for-mayor",
+        learnMore: [
+            {
+                label: "Renter supports and protections",
+                url: "https://vancouver.ca/people-programs/rental-and-renter-protection.aspx",
+            },
+        ],
     },
     {
         id: "free-transit",
@@ -192,8 +212,12 @@ export const QUESTIONS: Question[] = [
         against: ["TransLink and the province set fares, not the city."],
         offices: ["mayor", "council"],
         note: "TransLink and the province set fares, so the city cannot do this alone.",
-        sourceLabel: "Vote Vancouver and Bright Future platforms",
-        sourceUrl: "https://www.votevancouver.ca/rebecca-bligh",
+        learnMore: [
+            {
+                label: "How transit fares work",
+                url: "https://www.translink.ca/fares",
+            },
+        ],
     },
     {
         id: "repeal-plans",
@@ -215,8 +239,12 @@ export const QUESTIONS: Question[] = [
         against: ["Repealing city-wide plans delays homes the city badly needs."],
         offices: ["mayor", "council"],
         note: "The province sets housing targets the city has to meet.",
-        sourceLabel: "TEAM platform",
-        sourceUrl: "https://www.voteteam.ca/candidates-2026/colleen-for-mayor",
+        learnMore: [
+            {
+                label: "What the Broadway Plan is",
+                url: "https://vancouver.ca/home-property-development/broadway-plan.aspx",
+            },
+        ],
     },
     {
         id: "parking-at-parks",
@@ -237,8 +265,12 @@ export const QUESTIONS: Question[] = [
         slatesA: ["abc"],
         offices: ["park"],
         note: "The elected Park Board runs parking at parks.",
-        sourceLabel: "ABC Vancouver platform",
-        sourceUrl: "https://abcvancouver.ca/platform/",
+        learnMore: [
+            {
+                label: "Parking at Vancouver parks",
+                url: "https://vancouver.ca/parks-recreation-culture/parks-gardens-and-beaches.aspx",
+            },
+        ],
     },
     {
         id: "park-space",
@@ -259,8 +291,12 @@ export const QUESTIONS: Question[] = [
         slatesA: ["team"],
         offices: ["park"],
         note: "Park space depends on land the city already owns or can buy.",
-        sourceLabel: "TEAM platform",
-        sourceUrl: "https://www.voteteam.ca/candidates-2026/colleen-for-mayor",
+        learnMore: [
+            {
+                label: "VanPlay, the parks master plan",
+                url: "https://vancouver.ca/parks-recreation-culture/vanplay-parks-and-recreation-strategy.aspx",
+            },
+        ],
     },
     {
         id: "food-programs",
@@ -281,7 +317,11 @@ export const QUESTIONS: Question[] = [
         slatesA: ["cope"],
         offices: ["park"],
         note: "Food programs are run by community groups, often on city property.",
-        sourceLabel: "COPE platform",
-        sourceUrl: "https://vancouver.ca/plan-your-vote/index.aspx",
+        learnMore: [
+            {
+                label: "Vancouver's food strategy",
+                url: "https://vancouver.ca/people-programs/vancouver-food-strategy.aspx",
+            },
+        ],
     },
 ];
