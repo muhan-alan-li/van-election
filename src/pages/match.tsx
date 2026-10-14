@@ -200,13 +200,8 @@ export function MatchPage() {
     return (
         <>
             <p class="eyebrow">Find candidates</p>
-            <h1>Pick the things that matter to you</h1>
-            <p class="lede">
-                Answer as many as you like, and skip anything you are not sure about. Each answer is a
-                position a candidate or slate states in a platform we have read. This is not a rating: a
-                candidate with no stated position is a gap in our information, not a disagreement. Star the
-                names you want to keep and find them under Shortlist.
-            </p>
+            <h1>What matters to you?</h1>
+            <p class="lede">Answer a few questions. Skip the rest. Star the names you want to keep.</p>
 
             {answeredCount > 0 && (
                 <div class="match-now" aria-live="polite">
@@ -284,8 +279,7 @@ export function MatchPage() {
             <h2 id="match-results">Candidates by office</h2>
             {answeredCount === 0 ? (
                 <p class="empty">
-                    Everyone running is listed below, grouped by the office they seek. Answer a question above
-                    and each name will show where they line up with what you chose.
+                    Everyone running is listed below by office. Answer above to see who lines up with you.
                 </p>
             ) : (
                 <>

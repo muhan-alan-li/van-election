@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import { candidateById } from "../data/index.js";
 import { OFFICES } from "../data/election.js";
-import { matchHref } from "../router.js";
 import { CandidatePanel } from "./pages.tsx";
 import { clearShortlist, removeFromShortlist, useShortlist } from "../shortlist.js";
 
@@ -24,14 +23,12 @@ export function ShortlistPage() {
             <h1>Shortlist</h1>
             {shortlisted.length === 0 ? (
                 <p class="empty">
-                    Nothing saved yet. Answer the questions under <a href={matchHref()}>Find candidates</a>{" "}
-                    and star the names you want to keep — they will appear here, grouped by office.
+                    Nothing saved yet. Star names under Find candidates and they will appear here.
                 </p>
             ) : (
                 <>
                     <p class="lede">
-                        {shortlisted.length} candidate{shortlisted.length === 1 ? "" : "s"} saved on this
-                        device. Select a name for their record and platform.
+                        {shortlisted.length} saved on this device. Select a name for details.
                     </p>
                     <p>
                         <button type="button" class="match-clear" onClick={clearShortlist}>
