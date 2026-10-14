@@ -350,11 +350,17 @@ export function MatchPage() {
                         </div>
                     </>
                 ) : (
-                    <>
-                        <h2>Your answers</h2>
+                    <details class="quiz-review" open>
+                        <summary>
+                            <span class="quiz-review-title">Your answers</span>{" "}
+                            <span class="match-count">
+                                {answeredCount} of {QUESTIONS.length} answered
+                            </span>
+                        </summary>
                         <p class="count" aria-live="polite">
-                            {answeredCount} of {QUESTIONS.length} answered
-                            {answeredCount < QUESTIONS.length ? " — the rest skipped" : ""}
+                            {answeredCount === QUESTIONS.length
+                                ? "All questions answered."
+                                : "Select any row to change it — blank rows stay skipped."}
                         </p>
                         <ul class="quiz-review-list">
                             {QUESTIONS.map((q, i) => {
@@ -380,7 +386,7 @@ export function MatchPage() {
                         >
                             Show candidates ↓
                         </button>
-                    </>
+                    </details>
                 )}
             </section>
 

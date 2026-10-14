@@ -1042,6 +1042,21 @@ html:has(.claim-panel[open]) {
 .quiz-review-list button:hover {
     border-color: var(--ink3);
 }
+.quiz-review {
+    margin-top: 4px;
+}
+.quiz-review > summary {
+    padding: 10px 0;
+    color: var(--ink);
+    cursor: pointer;
+}
+.quiz-review-title {
+    font: 650 22px/1.3 var(--sans);
+    letter-spacing: -0.015em;
+}
+.quiz-review > summary .match-count {
+    margin-left: 8px;
+}
 .match-q {
     margin: 0;
     padding: 20px 20px 18px;
