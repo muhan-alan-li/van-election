@@ -32,7 +32,7 @@ export function App() {
                 ) : route.view === "match" ? (
                     <MatchPage />
                 ) : route.view === "platforms" ? (
-                    <PlatformsPage />
+                    <PlatformsPage id={route.id} />
                 ) : route.view === "shortlist" ? (
                     <ShortlistPage />
                 ) : (

@@ -60,6 +60,7 @@ export interface Candidate {
 export interface Slate {
     id: string;
     name: string;
+    summary: string;
     website: string;
     running: Partial<Record<OfficeId, number>>;
     pillars: {

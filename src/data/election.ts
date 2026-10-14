@@ -53,6 +53,8 @@ export const SLATES: Slate[] = [
     {
         id: "abc",
         name: "ABC Vancouver",
+        summary:
+            "Ban public drug use, freeze property taxes in 2027, and build middle-income rentals on city land.",
         website: "https://abcvancouver.ca/",
         running: { mayor: 1, council: 9, park: 7 },
         pillars: [
@@ -98,6 +100,8 @@ export const SLATES: Slate[] = [
     {
         id: "green",
         name: "Green Party of Vancouver",
+        summary:
+            "Build city-owned affordable rentals, expand walking and cycling, and introduce ranked mayoral ballots and a lobbyist registry.",
         website: "https://petefry.ca/",
         running: { mayor: 1, council: 4, park: 3, school: 2 },
         pillars: [
@@ -143,6 +147,8 @@ export const SLATES: Slate[] = [
     {
         id: "vanlib",
         name: "Vancouver Liberals",
+        summary:
+            "Streamline housing approvals, hire more frontline safety workers, and expand protected bike lanes and transit.",
         website: "https://www.vancouverliberals.com/issues",
         running: { mayor: 1, council: 7, park: 6, school: 5 },
         pillars: [
@@ -188,6 +194,8 @@ export const SLATES: Slate[] = [
     {
         id: "votevan",
         name: "Vote Vancouver",
+        summary:
+            "Build affordable homes on public land, support local businesses, and make transit free for people under 18.",
         website: "https://www.votevancouver.ca/",
         running: { mayor: 1, council: 6, park: 2, school: 3 },
         pillars: [
@@ -233,6 +241,8 @@ export const SLATES: Slate[] = [
     {
         id: "team",
         name: "TEAM for a Livable Vancouver",
+        summary:
+            "Restore neighbourhood planning, protect existing affordable rentals, and expand community policing and recovery homes.",
         website: "https://www.voteteam.ca/",
         running: { mayor: 1, council: 7, park: 5, school: 1 },
         pillars: [
@@ -278,6 +288,8 @@ export const SLATES: Slate[] = [
     {
         id: "bright",
         name: "Bright Future Vancouver",
+        summary:
+            "Help renters build ownership equity, make transit free for residents, and invest in youth programs and community safety.",
         website: "https://www.brightfuturevancouver.com/",
         running: { mayor: 1, council: 6 },
         pillars: [
@@ -323,6 +335,8 @@ export const SLATES: Slate[] = [
     {
         id: "onecity",
         name: "OneCity Vancouver",
+        summary:
+            "Strengthen renter protections, build housing for all incomes, and put homes near transit to cut emissions.",
         website: "https://vancouver.ca/plan-your-vote/index.aspx",
         running: { council: 5, park: 3, school: 5 },
         pillars: [
@@ -356,6 +370,7 @@ export const SLATES: Slate[] = [
     {
         id: "cope",
         name: "COPE",
+        summary: "Protect tenants, improve transit access, and fund community food programs.",
         website: "https://vancouver.ca/plan-your-vote/index.aspx",
         running: { council: 4, park: 4, school: 4 },
         pillars: [
