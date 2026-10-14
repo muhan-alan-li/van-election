@@ -27,7 +27,6 @@ export function ShortlistPage() {
 
     return (
         <>
-            <p class="eyebrow">Your list</p>
             <h1>Shortlist</h1>
             {shortlisted.length === 0 ? (
                 <p class="empty">

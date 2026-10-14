@@ -3,6 +3,7 @@ import { Navigation } from "./components/navigation.tsx";
 import { CandidatePage } from "./pages/candidate.tsx";
 import { HomePage } from "./pages/home.tsx";
 import { MatchPage } from "./pages/match.tsx";
+import { PlatformsPage } from "./pages/platforms.tsx";
 import { ShortlistPage } from "./pages/shortlist.tsx";
 import { parseHash, type Route } from "./router.js";
 
@@ -30,6 +31,8 @@ export function App() {
                     <CandidatePage key={route.id} id={route.id} />
                 ) : route.view === "match" ? (
                     <MatchPage />
+                ) : route.view === "platforms" ? (
+                    <PlatformsPage />
                 ) : route.view === "shortlist" ? (
                     <ShortlistPage />
                 ) : (
@@ -40,8 +43,8 @@ export function App() {
                 <div class="in">
                     <p>
                         Independent voter guide for the October 17, 2026 election. Arguments for and against
-                        are what people in this campaign say, not our view. Coverage is partial, so check the
-                        linked sources before you vote.
+                        are what people in this campaign say. Coverage is partial, so check the linked sources
+                        before you vote.
                     </p>
                 </div>
             </footer>
