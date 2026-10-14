@@ -298,7 +298,7 @@ export function MatchPage() {
         <>
             <p class="eyebrow">Find candidates</p>
             <h1>What matters to you?</h1>
-            <p class="lede">Answer a few questions. Skip the rest. Star the names you want to keep.</p>
+            <p class="lede">Answer a few questions. Leave the rest blank. Star the names you want to keep.</p>
 
             <section id="match-quiz" aria-label="Questions">
                 {!reviewing && current ? (
@@ -344,16 +344,6 @@ export function MatchPage() {
                                 </button>
                             )}
                             <span class="quiz-spacer" />
-                            <button
-                                type="button"
-                                class="quiz-btn"
-                                onClick={() => {
-                                    clearAnswer(current);
-                                    goStep(step + 1);
-                                }}
-                            >
-                                Skip
-                            </button>
                             <button type="button" class="quiz-btn quiz-next" onClick={() => goStep(step + 1)}>
                                 {step === lastStep ? "See your answers ↓" : "Next →"}
                             </button>
