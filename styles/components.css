@@ -1055,6 +1055,39 @@ html:has(.claim-panel[open]) {
     height: 16px;
     accent-color: var(--accent);
 }
+
+/* Office tabs: one candidate list visible at a time. */
+.office-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0 4px;
+}
+.office-tab {
+    padding: 8px 14px;
+    border: 1px solid var(--line2);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--ink2);
+    font: 600 14px var(--sans);
+    cursor: pointer;
+}
+.office-tab:hover {
+    border-color: var(--ink3);
+    color: var(--ink);
+}
+.office-tab.is-active {
+    border-color: var(--accent);
+    background: var(--panel2);
+    color: var(--ink);
+}
+.office-tab-count {
+    color: var(--ink3);
+    font-variant-numeric: tabular-nums;
+}
+.office-tab.is-active .office-tab-count {
+    color: var(--ink);
+}
 .match-group {
     margin-top: 26px;
 }

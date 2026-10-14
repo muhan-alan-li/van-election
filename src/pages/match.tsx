@@ -5,6 +5,7 @@ import { QUESTIONS, type Question } from "../data/questions.js";
 import type { Candidate, OfficeId } from "../data/types.js";
 import { SourceLink } from "../components/ui.tsx";
 import { CandidatePanel } from "./pages.tsx";
+import { OfficeTabs } from "../components/office-tabs.tsx";
 import { toggleShortlist, useShortlist } from "../shortlist.js";
 
 type Side = "a" | "b";
@@ -154,6 +155,7 @@ export function MatchPage() {
     const [answers, setAnswers] = useState<Record<string, Answer>>({});
     const [hideUnknown, setHideUnknown] = useState(false);
     const [openId, setOpenId] = useState<string | null>(null);
+    const [officeTab, setOfficeTab] = useState<OfficeId>("mayor");
 
     const answeredCount = Object.keys(answers).length;
     const selected = openId ? (candidateById.get(openId) ?? null) : null;
@@ -297,25 +299,43 @@ export function MatchPage() {
                 </>
             )}
 
-            {sections.map(({ office, lines }) => (
-                <section class="match-group" key={office.id} aria-label={office.title}>
-                    <h3 class="match-group-title">
-                        {office.title}{" "}
-                        <span class="match-count">
-                            {office.voteFor} · {lines.length} candidate{lines.length === 1 ? "" : "s"}
-                        </span>
-                    </h3>
-                    {lines.length === 0 ? (
-                        <p class="empty">No candidates to show with these settings.</p>
-                    ) : (
-                        <ul class="match-list">
-                            {lines.map((line) => (
-                                <CandidateRow key={line.candidate.id} line={line} onOpen={setOpenId} />
-                            ))}
-                        </ul>
-                    )}
-                </section>
-            ))}
+            <OfficeTabs
+                tabs={sections.map(({ office, lines }) => ({
+                    id: office.id,
+                    title: office.title,
+                    count: lines.length,
+                }))}
+                active={officeTab}
+                onChange={setOfficeTab}
+            />
+
+            {sections.map(({ office, lines }) =>
+                office.id !== officeTab ? null : (
+                    <section
+                        class="match-group"
+                        key={office.id}
+                        role="tabpanel"
+                        id={`office-panel-${office.id}`}
+                        aria-labelledby={`office-tab-${office.id}`}
+                    >
+                        <h3 class="match-group-title">
+                            {office.title}{" "}
+                            <span class="match-count">
+                                {office.voteFor} · {lines.length} candidate{lines.length === 1 ? "" : "s"}
+                            </span>
+                        </h3>
+                        {lines.length === 0 ? (
+                            <p class="empty">No candidates to show with these settings.</p>
+                        ) : (
+                            <ul class="match-list">
+                                {lines.map((line) => (
+                                    <CandidateRow key={line.candidate.id} line={line} onOpen={setOpenId} />
+                                ))}
+                            </ul>
+                        )}
+                    </section>
+                ),
+            )}
 
             {selected && <CandidatePanel candidate={selected} onClose={() => setOpenId(null)} />}
         </>

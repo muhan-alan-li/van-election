@@ -1,12 +1,15 @@
 import { useState } from "preact/hooks";
 import { candidateById } from "../data/index.js";
 import { OFFICES } from "../data/election.js";
+import type { OfficeId } from "../data/types.js";
 import { CandidatePanel } from "./pages.tsx";
+import { OfficeTabs } from "../components/office-tabs.tsx";
 import { clearShortlist, removeFromShortlist, useShortlist } from "../shortlist.js";
 
 export function ShortlistPage() {
     const shortlisted = useShortlist();
     const [openId, setOpenId] = useState<string | null>(null);
+    const [officeTab, setOfficeTab] = useState<OfficeId>("mayor");
     const selected = openId ? (candidateById.get(openId) ?? null) : null;
 
     const sections = OFFICES.map((office) => ({
@@ -16,6 +19,10 @@ export function ShortlistPage() {
             .filter((c) => c && c.office === office.id)
             .sort((a, b) => a!.ballot - b!.ballot),
     })).filter((s) => s.candidates.length > 0);
+    const active =
+        sections.some((s) => s.office.id === officeTab) && sections.length > 0
+            ? officeTab
+            : sections[0]?.office.id;
 
     return (
         <>
@@ -33,45 +40,64 @@ export function ShortlistPage() {
                             Clear the whole shortlist
                         </button>
                     </p>
-                    {sections.map(({ office, candidates }) => (
-                        <section class="match-group" key={office.id} aria-label={office.title}>
-                            <h3 class="match-group-title">
-                                {office.title}{" "}
-                                <span class="match-count">
-                                    {office.voteFor} · {candidates.length} saved
-                                </span>
-                            </h3>
-                            <ul class="match-list">
-                                {candidates.map((c) => (
-                                    <li class="match-row" key={c!.id}>
-                                        <div class="match-row-head">
-                                            <button
-                                                type="button"
-                                                class="match-row-open"
-                                                aria-haspopup="dialog"
-                                                onClick={() => setOpenId(c!.id)}
-                                            >
-                                                <span class="match-row-name">{c!.name}</span>
-                                                <span class="match-row-meta">
-                                                    Ballot #{c!.ballot} · {c!.party}
-                                                </span>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="shortlist-btn is-saved"
-                                                aria-pressed="true"
-                                                aria-label={`Remove ${c!.name} from your shortlist`}
-                                                title="Remove from shortlist"
-                                                onClick={() => removeFromShortlist(c!.id)}
-                                            >
-                                                <span aria-hidden="true">★</span>
-                                            </button>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </section>
-                    ))}
+                    {active && (
+                        <OfficeTabs
+                            tabs={sections.map(({ office, candidates }) => ({
+                                id: office.id,
+                                title: office.title,
+                                count: candidates.length,
+                            }))}
+                            active={active}
+                            onChange={setOfficeTab}
+                        />
+                    )}
+                    {sections.map(({ office, candidates }) =>
+                        office.id !== active ? null : (
+                            <section
+                                class="match-group"
+                                key={office.id}
+                                role="tabpanel"
+                                id={`office-panel-${office.id}`}
+                                aria-labelledby={`office-tab-${office.id}`}
+                            >
+                                <h3 class="match-group-title">
+                                    {office.title}{" "}
+                                    <span class="match-count">
+                                        {office.voteFor} · {candidates.length} saved
+                                    </span>
+                                </h3>
+                                <ul class="match-list">
+                                    {candidates.map((c) => (
+                                        <li class="match-row" key={c!.id}>
+                                            <div class="match-row-head">
+                                                <button
+                                                    type="button"
+                                                    class="match-row-open"
+                                                    aria-haspopup="dialog"
+                                                    onClick={() => setOpenId(c!.id)}
+                                                >
+                                                    <span class="match-row-name">{c!.name}</span>
+                                                    <span class="match-row-meta">
+                                                        Ballot #{c!.ballot} · {c!.party}
+                                                    </span>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="shortlist-btn is-saved"
+                                                    aria-pressed="true"
+                                                    aria-label={`Remove ${c!.name} from your shortlist`}
+                                                    title="Remove from shortlist"
+                                                    onClick={() => removeFromShortlist(c!.id)}
+                                                >
+                                                    <span aria-hidden="true">★</span>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section>
+                        ),
+                    )}
                 </>
             )}
 
