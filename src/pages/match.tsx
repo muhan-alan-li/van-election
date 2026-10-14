@@ -212,58 +212,42 @@ export function MatchPage() {
                     return (
                         <fieldset class="match-q" key={q.id}>
                             <legend>{q.prompt}</legend>
-                            <div class="match-options">
+                            <div class="match-yn">
                                 {(["a", "b"] as Side[]).map((side) => {
                                     const yes = side === "a";
+                                    const opt = yes ? yesOpt : noOpt;
+                                    const points = yes ? q.for : q.against;
                                     return (
-                                        <label class="match-option match-yesno" key={side}>
-                                            <input
-                                                type="radio"
-                                                name={q.id}
-                                                checked={picked === side}
-                                                onChange={() => choose(q, answerFor(q, side))}
-                                                onClick={() => {
-                                                    if (picked === side) clearAnswer(q);
-                                                }}
-                                            />
-                                            <span class="match-verdict">{yes ? "Yes" : "No"}</span>
-                                        </label>
+                                        <div class="match-col" key={side}>
+                                            <label class="match-option match-yesno">
+                                                <input
+                                                    type="radio"
+                                                    name={q.id}
+                                                    checked={picked === side}
+                                                    onChange={() => choose(q, answerFor(q, side))}
+                                                    onClick={() => {
+                                                        if (picked === side) clearAnswer(q);
+                                                    }}
+                                                />
+                                                <span class="match-verdict">{yes ? "Yes" : "No"}</span>
+                                            </label>
+                                            <section
+                                                class="match-analysis"
+                                                aria-label={`If you answer ${yes ? "yes" : "no"}: ${opt.label}`}
+                                            >
+                                                <h4>
+                                                    {yes ? "Yes" : "No"} — {opt.label}
+                                                </h4>
+                                                <ul>
+                                                    <li>{opt.detail}</li>
+                                                    {points.map((a, i) => (
+                                                        <li key={i}>{a}</li>
+                                                    ))}
+                                                </ul>
+                                            </section>
+                                        </div>
                                     );
                                 })}
-                            </div>
-                            <div class="match-sides">
-                                <section class="match-side" aria-label={`What Yes means: ${yesOpt.label}`}>
-                                    <h4>
-                                        <span class="match-tag match-tag-yes">Yes</span> {yesOpt.label}
-                                    </h4>
-                                    <p>{yesOpt.detail}</p>
-                                    {q.for.length > 0 && (
-                                        <>
-                                            <p class="match-side-why">Supporters say:</p>
-                                            <ul>
-                                                {q.for.map((a, i) => (
-                                                    <li key={i}>{a}</li>
-                                                ))}
-                                            </ul>
-                                        </>
-                                    )}
-                                </section>
-                                <section class="match-side" aria-label={`What No means: ${noOpt.label}`}>
-                                    <h4>
-                                        <span class="match-tag match-tag-no">No</span> {noOpt.label}
-                                    </h4>
-                                    <p>{noOpt.detail}</p>
-                                    {q.against.length > 0 && (
-                                        <>
-                                            <p class="match-side-why">Critics say:</p>
-                                            <ul>
-                                                {q.against.map((a, i) => (
-                                                    <li key={i}>{a}</li>
-                                                ))}
-                                            </ul>
-                                        </>
-                                    )}
-                                </section>
                             </div>
                             <p class="match-q-meta">
                                 {q.note}

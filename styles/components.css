@@ -985,13 +985,6 @@ html:has(.claim-panel[open]) {
     letter-spacing: -0.015em;
     color: var(--ink);
 }
-.match-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 10px;
-    clear: both;
-}
 .match-option {
     display: flex;
     gap: 8px;
@@ -1028,52 +1021,37 @@ html:has(.claim-panel[open]) {
     font-size: 19px;
     font-weight: 650;
 }
-/* Yes and No blocks: what each answer means, with what each side says. */
-.match-sides {
+/* Yes/No columns: each button sits above its own plain analysis. */
+.match-yn {
     display: grid;
-    gap: 8px;
-    margin-top: 12px;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 10px;
     clear: both;
 }
-.match-side {
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--panel);
-    padding: 10px 12px;
+.match-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
 }
-.match-side h4 {
+.match-analysis h4 {
     margin: 0 0 4px;
-    font-size: 14.5px;
+    font-size: 14px;
     line-height: 1.4;
     color: var(--ink);
 }
-.match-side h4 .match-tag {
-    vertical-align: 1px;
-}
-.match-side > p {
-    margin: 0;
-    color: var(--ink2);
-    font-size: 13px;
-    line-height: 1.5;
-}
-.match-side > p.match-side-why {
-    margin: 8px 0 2px;
-    color: var(--ink3);
-    font: 800 11px/1.5 var(--sans);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-.match-side ul {
+.match-analysis ul {
     margin: 0;
     padding-left: 18px;
     color: var(--ink2);
     font-size: 13px;
     line-height: 1.5;
 }
-.match-side li {
+.match-analysis li {
     margin-bottom: 4px;
 }
-.match-side li:last-child {
+.match-analysis li:last-child {
     margin-bottom: 0;
 }
 .match-q-meta {
@@ -1278,9 +1256,9 @@ html:has(.claim-panel[open]) {
     }
 }
 
-/* Options sit side by side; stack them only when the card gets narrow. */
+/* Columns sit side by side; stack them only when the card gets narrow. */
 @media (max-width: 560px) {
-    .match-options {
+    .match-yn {
         grid-template-columns: 1fr;
     }
 }
