@@ -1,4 +1,4 @@
-import { candidateHref, matchHref, methodologyHref, shortlistHref, type Route } from "../router.js";
+import { matchHref, shortlistHref, type Route } from "../router.js";
 import { useShortlist } from "../shortlist.js";
 
 export function Navigation({ route }: { route: Route }) {
@@ -14,9 +14,6 @@ export function Navigation({ route }: { route: Route }) {
             <a href={shortlistHref()} aria-current={route.view === "shortlist" ? "page" : undefined}>
                 Shortlist{shortlist.length > 0 ? ` (${shortlist.length})` : ""}
             </a>
-            <a href={methodologyHref()} aria-current={route.view === "methodology" ? "page" : undefined}>
-                Methodology
-            </a>
         </nav>
     );
 }
@@ -27,8 +24,4 @@ export function BackLink({ href, children }: { href: string; children: string })
             <a href={href}>← {children}</a>
         </p>
     );
-}
-
-export function CandidateLink({ id, name }: { id: string; name: string }) {
-    return <a href={candidateHref(id)}>{name}</a>;
 }

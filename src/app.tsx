@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState } from "preact/hooks";
 import { Navigation } from "./components/navigation.tsx";
-import { CandidatePage, HomePage, MethodologyPage } from "./pages/pages.tsx";
+import { CandidatePage } from "./pages/candidate.tsx";
+import { HomePage } from "./pages/home.tsx";
 import { MatchPage } from "./pages/match.tsx";
 import { ShortlistPage } from "./pages/shortlist.tsx";
 import { parseHash, type Route } from "./router.js";
@@ -27,8 +28,6 @@ export function App() {
             <main id="app" class="shell">
                 {route.view === "candidate" ? (
                     <CandidatePage key={route.id} id={route.id} />
-                ) : route.view === "methodology" ? (
-                    <MethodologyPage />
                 ) : route.view === "match" ? (
                     <MatchPage />
                 ) : route.view === "shortlist" ? (

@@ -47,14 +47,6 @@ export function toggleShortlist(id: string) {
     commit();
 }
 
-export function removeFromShortlist(id: string) {
-    if (!ids.has(id)) return;
-    const next = new Set(ids);
-    next.delete(id);
-    ids = next;
-    commit();
-}
-
 export function clearShortlist() {
     if (ids.size === 0) return;
     ids = new Set();

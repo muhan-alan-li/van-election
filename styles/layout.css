@@ -19,26 +19,6 @@ header.top {
     font-weight: 650;
     font-size: 20px;
     letter-spacing: -0.02em;
-    display: flex;
-    align-items: baseline;
-    gap: 9px;
-}
-.brand .mark {
-    font-family: var(--sans);
-    background: var(--accent);
-    color: #fff;
-    font-weight: 800;
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    padding: 3px 7px;
-    border-radius: 3px;
-    text-transform: uppercase;
-}
-.brand .sub {
-    font-family: var(--sans);
-    color: var(--ink3);
-    font-weight: 500;
-    font-size: 14px;
 }
 nav.tabs {
     margin-left: auto;
@@ -69,30 +49,11 @@ main {
     margin: 0 auto;
     padding: 44px 24px 90px;
 }
-html[data-view="office"] main > h1 {
-    font-size: clamp(28px, 3vw, 38px);
-}
-html[data-view="office"] main > .back {
-    margin-bottom: 2px;
-}
 .lede {
     color: var(--ink2);
     max-width: 66ch;
     font-size: 20px;
     line-height: 1.6;
-}
-
-.note {
-    border-left: 4px solid var(--accent);
-    background: var(--panel);
-    padding: 13px 16px;
-    margin: 18px 0 24px;
-    font: 16px/1.65 var(--body);
-    color: var(--ink2);
-    border-radius: 0 var(--radius) var(--radius) 0;
-}
-.note strong {
-    color: var(--ink);
 }
 
 @media (max-width: 820px) {
@@ -121,8 +82,5 @@ html[data-view="office"] main > .back {
     }
     .lede {
         font-size: 18px;
-    }
-    .cards {
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
     }
 }

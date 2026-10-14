@@ -11,23 +11,3 @@ export function SourceLink({ href, children }: { href: string; children: Compone
 export function Badge({ tone, children }: { tone: string; children: ComponentChildren }) {
     return <span class={`chip s-${tone}`}>{children}</span>;
 }
-
-export function Card({
-    href,
-    title,
-    meta,
-    children,
-}: {
-    href: string;
-    title: string;
-    meta?: string;
-    children?: ComponentChildren;
-}) {
-    return (
-        <a class="card" href={href}>
-            <strong>{title}</strong>
-            {meta && <div class="card-meta">{meta}</div>}
-            {children && <div>{children}</div>}
-        </a>
-    );
-}

@@ -1,10 +1,11 @@
 import { useState } from "preact/hooks";
 import { candidateById } from "../data/index.js";
 import { OFFICES } from "../data/election.js";
-import type { OfficeId } from "../data/types.js";
-import { CandidatePanel } from "./pages.tsx";
+import type { Candidate, OfficeId } from "../data/types.js";
+import { CandidatePanel } from "../components/candidate-panel.tsx";
 import { OfficeTabs } from "../components/office-tabs.tsx";
-import { clearShortlist, removeFromShortlist, useShortlist } from "../shortlist.js";
+import { ShortlistButton } from "../components/shortlist-button.tsx";
+import { clearShortlist, useShortlist } from "../shortlist.js";
 
 export function ShortlistPage() {
     const shortlisted = useShortlist();
@@ -16,8 +17,8 @@ export function ShortlistPage() {
         office,
         candidates: shortlisted
             .map((id) => candidateById.get(id))
-            .filter((c) => c && c.office === office.id)
-            .sort((a, b) => a!.ballot - b!.ballot),
+            .filter((c): c is Candidate => c !== undefined && c.office === office.id)
+            .sort((a, b) => a.ballot - b.ballot),
     })).filter((s) => s.candidates.length > 0);
     const active =
         sections.some((s) => s.office.id === officeTab) && sections.length > 0
@@ -68,29 +69,20 @@ export function ShortlistPage() {
                                 </h3>
                                 <ul class="match-list">
                                     {candidates.map((c) => (
-                                        <li class="match-row" key={c!.id}>
+                                        <li class="match-row" key={c.id}>
                                             <div class="match-row-head">
                                                 <button
                                                     type="button"
                                                     class="match-row-open"
                                                     aria-haspopup="dialog"
-                                                    onClick={() => setOpenId(c!.id)}
+                                                    onClick={() => setOpenId(c.id)}
                                                 >
-                                                    <span class="match-row-name">{c!.name}</span>
+                                                    <span class="match-row-name">{c.name}</span>
                                                     <span class="match-row-meta">
-                                                        Ballot #{c!.ballot} · {c!.party}
+                                                        Ballot #{c.ballot} · {c.party}
                                                     </span>
                                                 </button>
-                                                <button
-                                                    type="button"
-                                                    class="shortlist-btn is-saved"
-                                                    aria-pressed="true"
-                                                    aria-label={`Remove ${c!.name} from your shortlist`}
-                                                    title="Remove from shortlist"
-                                                    onClick={() => removeFromShortlist(c!.id)}
-                                                >
-                                                    <span aria-hidden="true">★</span>
-                                                </button>
+                                                <ShortlistButton id={c.id} name={c.name} />
                                             </div>
                                         </li>
                                     ))}

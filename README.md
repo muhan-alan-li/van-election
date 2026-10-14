@@ -18,7 +18,7 @@ npm run check    # tsc --noEmit
 ```
 
 Open `dist/index.html` via any static server. Routes: `#/` home, `#/match` find
-candidates, `#/shortlist` shortlist, `#/c/:candidate-id`, `#/methodology`.
+candidates, `#/shortlist` shortlist, `#/c/:candidate-id`.
 
 ## Candidate pages
 
@@ -35,8 +35,8 @@ Keep the page to three blocks. One summary per page, and one per section — nev
 3. **What to check** — `analysis.recordNote` and `analysis.openQuestions`.
 
 There is deliberately no sources section (each issue carries its own link) and no per-page disclaimer.
-The single site-wide disclaimer lives in the footer in `src/app.tsx`; the full version is on the
-methodology page. Arguments are what people in the campaign say, labelled "Supporters say" / "Critics
+The single site-wide disclaimer lives in the footer in `src/app.tsx`; the "How this guide works"
+section on the home page carries the full version. Arguments are what people in the campaign say, labelled "Supporters say" / "Critics
 say". They are not the guide's view, and candidates are not scored or ranked.
 
 `#/match` (`MatchPage`) is the candidate finder. Questions live in `src/data/questions.ts`: each one
@@ -55,9 +55,17 @@ the reader answers. Selecting a picked Yes or No again clears that answer. Reade
 localStorage, shown at `#/shortlist` grouped by office). The finder is not a score or a ranking; keep
 it that way.
 
-Selecting a candidate opens `CandidatePanel` (a `dialog.claim-panel` drawer) with the candidate's
+Selecting a candidate opens `CandidatePanel` (`src/components/candidate-panel.tsx`, a
+`dialog.claim-panel` drawer) with the candidate's
 record and, where we have no individual analysis, the shared slate positions from `SLATES`. Keep panel
 copy short: two bullets per side, one clause each.
+
+## Structure
+
+- `src/matcher.ts` — answer model (`Answer`, `answerFor`, `pickedFor`) and stance math (`stanceFor`, `lineFor`). The `"none"` rule lives here.
+- `src/shortlist.ts` — shortlist store: `toggleShortlist`, `clearShortlist`, `useShortlist` (localStorage-backed).
+- `src/components/` — `ui.tsx` (`SourceLink`, `Badge`), `navigation.tsx`, `office-tabs.tsx`, `arguments.tsx`, `candidate-panel.tsx`, `shortlist-button.tsx`. Shared pieces live here, never in pages.
+- `src/pages/` — one file per route: `home.tsx`, `match.tsx` (carousel + office-tabbed results), `shortlist.tsx`, `candidate.tsx`.
 
 Write for a general reader: one idea per sentence, active voice, present tense, no unexplained
 jargon. Define a term the first time it appears, and keep sentences under about 25 words. Prefer a
