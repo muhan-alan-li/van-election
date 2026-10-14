@@ -131,25 +131,6 @@ table.votes th {
     max-width: 80ch;
 }
 
-.filters {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin: 16px 0 4px;
-}
-input[type="search"],
-select {
-    background: var(--bg);
-    color: var(--ink);
-    border: 1px solid var(--line2);
-    border-radius: var(--radius);
-    padding: 9px 11px;
-    font: 15px var(--sans);
-}
-input[type="search"] {
-    flex: 1;
-    min-width: 240px;
-}
 .count {
     color: var(--ink3);
     font-size: 13.5px;
@@ -456,65 +437,6 @@ footer .in {
 .votes-wrap {
     overflow-x: auto;
 }
-
-/* Candidate listings retain table columns on small screens and scroll horizontally. */
-.candidate-table-wrap {
-    overflow-x: auto;
-    margin-top: 18px;
-    border: 1px solid var(--line);
-}
-.candidate-table {
-    width: 100%;
-    min-width: 680px;
-    border-collapse: collapse;
-    font-size: 15px;
-}
-.candidate-table th,
-.candidate-table td {
-    text-align: left;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--line);
-    vertical-align: middle;
-}
-.candidate-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--panel);
-    color: var(--ink3);
-    font: 700 12px var(--sans);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-.candidate-table tbody th {
-    font-family: var(--sans);
-    font-weight: 600;
-    width: 25%;
-}
-.candidate-table tbody td {
-    color: var(--ink2);
-}
-.candidate-table tbody tr:last-child th,
-.candidate-table tbody tr:last-child td {
-    border-bottom: 0;
-}
-.candidate-row:hover {
-    background: var(--panel);
-}
-.candidate-table .chip {
-    white-space: normal;
-}
-html[data-view="office"] .candidate-table {
-    line-height: 1.3;
-}
-html[data-view="office"] .candidate-table th,
-html[data-view="office"] .candidate-table td {
-    padding: 8px 12px;
-    white-space: nowrap;
-}
-html[data-view="office"] .candidate-table .chip {
-    white-space: nowrap;
-}
 .sr-only {
     position: absolute;
     width: 1px;
@@ -647,79 +569,6 @@ html[data-view="office"] .candidate-table .chip {
     color: var(--ink3);
     background: var(--panel);
     border: 1px solid var(--line);
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 18px;
-    margin-top: 18px;
-    font: 14px var(--sans);
-}
-.pagination button {
-    background: var(--bg);
-    color: var(--ink);
-    border: 1px solid var(--line2);
-    border-radius: var(--radius);
-    padding: 8px 12px;
-    font: 600 14px var(--sans);
-    cursor: pointer;
-}
-.pagination button:disabled {
-    opacity: 0.45;
-    cursor: default;
-}
-
-.personal-filters {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 8px;
-}
-.hide-choice {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    cursor: pointer;
-}
-.hide-choice input {
-    accent-color: var(--accent);
-    width: 16px;
-    height: 16px;
-}
-.choice-note {
-    margin: 6px 0 0;
-    color: var(--ink3);
-    font-size: 12.5px;
-}
-.reset-choices {
-    background: none;
-    border: 0;
-    padding: 6px 0;
-    color: var(--link);
-    font: 14px var(--sans);
-    cursor: pointer;
-}
-.reset-choices:disabled {
-    color: var(--ink3);
-    cursor: default;
-}
-.candidate-choice {
-    font-size: 14px;
-    padding: 5px 8px;
-    min-width: 145px;
-}
-.candidate-row.choice-shortlisted {
-    background: var(--aligned-bg);
-}
-.candidate-row.choice-not-interested {
-    background: var(--panel);
-}
-.candidate-row.choice-not-interested a {
-    color: var(--ink3);
 }
 
 /* Candidate sections use plain headings and native disclosure controls. */
@@ -1079,44 +928,6 @@ html:has(.claim-panel[open]) {
     border: 1px solid var(--noev-line);
 }
 
-/* ---- Office table: every candidate in one list --------------------------- */
-
-.candidate-table {
-    min-width: 880px;
-}
-.candidate-row {
-    cursor: pointer;
-}
-.row-open {
-    background: none;
-    border: 0;
-    padding: 0;
-    font: 600 15px var(--sans);
-    color: var(--link);
-    text-align: left;
-    cursor: pointer;
-}
-.row-open:hover {
-    text-decoration: underline;
-}
-.row-gist {
-    color: var(--ink3);
-    font-size: 13.5px;
-    max-width: 36ch;
-}
-html[data-view="office"] .candidate-table td.row-gist {
-    white-space: normal;
-}
-.row-status .chip + .chip {
-    margin-left: 6px;
-}
-.table-note {
-    color: var(--ink3);
-    font-size: 13px;
-    margin-top: 10px;
-    max-width: 90ch;
-}
-
 /* ---- Side panel: brief profile for one candidate ------------------------- */
 
 .candidate-panel h2 {
@@ -1298,6 +1109,8 @@ html[data-view="office"] .candidate-table td.row-gist {
     color: var(--ink);
     text-align: left;
     cursor: pointer;
+    min-width: 0;
+    flex: 1;
 }
 .match-row-name {
     display: block;
@@ -1342,6 +1155,37 @@ html[data-view="office"] .candidate-table td.row-gist {
     color: var(--noev);
     background: var(--noev-bg);
     border: 1px solid var(--noev-line);
+}
+
+/* Candidate rows pair the name with a shortlist star. */
+.match-row-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+.shortlist-btn {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    line-height: 1;
+    color: var(--ink3);
+    background: var(--panel);
+    border: 1px solid var(--line2);
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+.shortlist-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.shortlist-btn.is-saved {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--panel2);
 }
 
 /* Two columns of questions on wide screens, so results are not far below. */

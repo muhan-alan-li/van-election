@@ -1,10 +1,11 @@
 import { useMemo, useState } from "preact/hooks";
-import { CANDIDATES } from "../data/index.js";
+import { CANDIDATES, candidateById } from "../data/index.js";
 import { OFFICES, SLATES } from "../data/election.js";
 import { QUESTIONS, type Question } from "../data/questions.js";
 import type { Candidate, OfficeId } from "../data/types.js";
-import { Badge, SourceLink } from "../components/ui.tsx";
+import { SourceLink } from "../components/ui.tsx";
 import { CandidatePanel } from "./pages.tsx";
+import { toggleShortlist, useShortlist } from "../shortlist.js";
 
 type Side = "a" | "b";
 
@@ -58,102 +59,93 @@ function stanceFor(c: Candidate, q: Question): Side | "none" {
     return "none";
 }
 
-interface Row {
+interface Line {
     candidate: Candidate;
     agrees: string[];
     disagrees: string[];
     unknown: number;
+    relevant: number;
 }
 
-interface Results {
-    unanimous: Row[];
-    partial: Row[];
-    against: Row[];
-    unknown: Row[];
-    offices: OfficeId[];
-}
-
-export function buildResults(answers: Record<string, Answer>): Results {
-    const answered = QUESTIONS.filter((q) => answers[q.id]);
-    const offices = [...new Set(answered.flatMap((q) => q.offices))];
-
-    const rows: Row[] = [];
-    for (const c of CANDIDATES) {
-        if (!offices.includes(c.office)) continue;
-        const agrees: string[] = [];
-        const disagrees: string[] = [];
-        let unknown = 0;
-
-        for (const q of answered) {
-            // Skip issues that do not bear on this race.
-            if (!q.offices.includes(c.office)) continue;
-            const stance = stanceFor(c, q);
-            if (stance === "none") {
-                unknown += 1;
-                continue;
-            }
-            const answer = answers[q.id];
-            if (stance === answer.want) agrees.push(q.topic);
-            else if (stance === answer.reject) disagrees.push(q.topic);
-            else unknown += 1;
+/** How one candidate lines up with the voter's answers on this office's issues. */
+function lineFor(c: Candidate, answers: Record<string, Answer>): Line {
+    const agrees: string[] = [];
+    const disagrees: string[] = [];
+    let unknown = 0;
+    let relevant = 0;
+    for (const q of QUESTIONS) {
+        const answer = answers[q.id];
+        if (!answer || !q.offices.includes(c.office)) continue;
+        relevant += 1;
+        const stance = stanceFor(c, q);
+        if (stance === "none") {
+            unknown += 1;
+            continue;
         }
-
-        rows.push({ candidate: c, agrees, disagrees, unknown });
+        if (stance === answer.want) agrees.push(q.topic);
+        else if (stance === answer.reject) disagrees.push(q.topic);
+        else unknown += 1;
     }
-
-    const byBallot = (a: Row, b: Row) => a.candidate.ballot - b.candidate.ballot;
-    return {
-        unanimous: rows.filter((r) => r.agrees.length > 0 && r.disagrees.length === 0).sort(byBallot),
-        partial: rows.filter((r) => r.agrees.length > 0 && r.disagrees.length > 0).sort(byBallot),
-        against: rows.filter((r) => r.agrees.length === 0 && r.disagrees.length > 0).sort(byBallot),
-        unknown: rows
-            .filter((r) => r.agrees.length === 0 && r.disagrees.length === 0 && r.unknown > 0)
-            .sort(byBallot),
-        offices,
-    };
+    return { candidate: c, agrees, disagrees, unknown, relevant };
 }
 
-/** "Mayor, City Council and Park Board" */
-function officeList(offices: OfficeId[]): string {
-    const titles = offices.map((o) => OFFICES.find((x) => x.id === o)!.title);
-    if (titles.length <= 1) return titles[0] ?? "";
-    return `${titles.slice(0, -1).join(", ")} and ${titles[titles.length - 1]}`;
+function ShortlistButton({ id, name }: { id: string; name: string }) {
+    const shortlist = useShortlist();
+    const saved = shortlist.includes(id);
+    return (
+        <button
+            type="button"
+            class={`shortlist-btn${saved ? " is-saved" : ""}`}
+            aria-pressed={saved}
+            aria-label={saved ? `Remove ${name} from your shortlist` : `Add ${name} to your shortlist`}
+            title={saved ? "Remove from shortlist" : "Add to shortlist"}
+            onClick={() => toggleShortlist(id)}
+        >
+            <span aria-hidden="true">{saved ? "★" : "☆"}</span>
+        </button>
+    );
 }
 
-function MatchRow({ row, onOpen }: { row: Row; onOpen: (id: string) => void }) {
-    const office = OFFICES.find((o) => o.id === row.candidate.office)!;
+function CandidateRow({ line, onOpen }: { line: Line; onOpen: (id: string) => void }) {
+    const { candidate } = line;
+    const showWhy = line.relevant > 0;
     return (
         <li class="match-row">
-            <button
-                type="button"
-                class="match-row-open"
-                aria-haspopup="dialog"
-                onClick={() => onOpen(row.candidate.id)}
-            >
-                <span class="match-row-name">{row.candidate.name}</span>
-                <span class="match-row-meta">
-                    {office.title} · {row.candidate.party}
-                </span>
-            </button>
-            <p class="match-row-why">
-                {row.agrees.length > 0 && (
-                    <>
-                        <span class="match-tag match-tag-yes">Agrees</span> {row.agrees.join(", ")}
-                    </>
-                )}
-                {row.agrees.length > 0 && row.disagrees.length > 0 && <br />}
-                {row.disagrees.length > 0 && (
-                    <>
-                        <span class="match-tag match-tag-no">Disagrees</span> {row.disagrees.join(", ")}
-                    </>
-                )}
-                {row.agrees.length === 0 && row.disagrees.length === 0 && (
-                    <>
-                        <span class="match-tag match-tag-none">No position found</span> on the {row.unknown}{" "}
-                        issue{row.unknown === 1 ? "" : "s"} you answered
-                    </>
-                )}
-            </p>
+            <div class="match-row-head">
+                <button
+                    type="button"
+                    class="match-row-open"
+                    aria-haspopup="dialog"
+                    onClick={() => onOpen(candidate.id)}
+                >
+                    <span class="match-row-name">{candidate.name}</span>
+                    <span class="match-row-meta">
+                        Ballot #{candidate.ballot} · {candidate.party}
+                    </span>
+                </button>
+                <ShortlistButton id={candidate.id} name={candidate.name} />
+            </div>
+            {showWhy && (
+                <p class="match-row-why">
+                    {line.agrees.length > 0 && (
+                        <>
+                            <span class="match-tag match-tag-yes">Agrees</span> {line.agrees.join(", ")}
+                        </>
+                    )}
+                    {line.agrees.length > 0 && line.disagrees.length > 0 && <br />}
+                    {line.disagrees.length > 0 && (
+                        <>
+                            <span class="match-tag match-tag-no">Disagrees</span> {line.disagrees.join(", ")}
+                        </>
+                    )}
+                    {line.agrees.length === 0 && line.disagrees.length === 0 && (
+                        <>
+                            <span class="match-tag match-tag-none">No position found</span> on the{" "}
+                            {line.relevant} issue{line.relevant === 1 ? "" : "s"} you answered
+                        </>
+                    )}
+                </p>
+            )}
         </li>
     );
 }
@@ -164,8 +156,37 @@ export function MatchPage() {
     const [openId, setOpenId] = useState<string | null>(null);
 
     const answeredCount = Object.keys(answers).length;
-    const results = useMemo(() => buildResults(answers), [answers]);
-    const selected = openId ? (CANDIDATES.find((c) => c.id === openId) ?? null) : null;
+    const selected = openId ? (candidateById.get(openId) ?? null) : null;
+
+    const sections = useMemo(() => {
+        const byOffice = new Map<OfficeId, Line[]>();
+        for (const c of CANDIDATES) {
+            const line = lineFor(c, answers);
+            const list = byOffice.get(c.office) ?? [];
+            list.push(line);
+            byOffice.set(c.office, list);
+        }
+        return OFFICES.map((office) => {
+            let lines = (byOffice.get(office.id) ?? []).sort(
+                (a, b) => a.candidate.ballot - b.candidate.ballot,
+            );
+            if (answeredCount > 0 && hideUnknown) {
+                lines = lines.filter(
+                    (l) => l.relevant === 0 || l.agrees.length > 0 || l.disagrees.length > 0,
+                );
+            }
+            return { office, lines };
+        });
+    }, [answers, answeredCount, hideUnknown]);
+
+    const alignedCount = useMemo(() => {
+        let n = 0;
+        for (const c of CANDIDATES) {
+            const line = lineFor(c, answers);
+            if (line.agrees.length > 0 && line.disagrees.length === 0) n += 1;
+        }
+        return n;
+    }, [answers]);
 
     const choose = (q: Question, answer: Answer) => {
         setAnswers((prev) => {
@@ -176,43 +197,21 @@ export function MatchPage() {
         });
     };
 
-    const groups: { key: string; title: string; rows: Row[] }[] = [
-        {
-            key: "unanimous",
-            title: "Agrees with you on every issue they state",
-            rows: results.unanimous,
-        },
-        {
-            key: "partial",
-            title: "Agrees with you on some issues",
-            rows: results.partial,
-        },
-        {
-            key: "against",
-            title: "Takes the opposite position",
-            rows: results.against,
-        },
-        {
-            key: "unknown",
-            title: "No stated position",
-            rows: results.unknown,
-        },
-    ];
-
     return (
         <>
             <p class="eyebrow">Find candidates</p>
             <h1>Pick the things that matter to you</h1>
             <p class="lede">
-                Answer as many as you like, and skip anything you do not care about. Each answer is a position
-                a candidate or slate states in a platform we have read. This is not a rating: a candidate with
-                no stated position is a gap in our information, not a disagreement.
+                Answer as many as you like, and skip anything you are not sure about. Each answer is a
+                position a candidate or slate states in a platform we have read. This is not a rating: a
+                candidate with no stated position is a gap in our information, not a disagreement. Star the
+                names you want to keep and find them under Shortlist.
             </p>
 
             {answeredCount > 0 && (
                 <div class="match-now" aria-live="polite">
                     <span class="match-now-counts">
-                        <strong>{results.unanimous.length}</strong> agree with you on every issue they state
+                        <strong>{alignedCount}</strong> agree with you on every issue they state
                     </span>
                     <button
                         type="button"
@@ -282,17 +281,16 @@ export function MatchPage() {
                 })}
             </form>
 
-            <h2 id="match-results">Results</h2>
+            <h2 id="match-results">Candidates by office</h2>
             {answeredCount === 0 ? (
                 <p class="empty">
-                    Answer a question above and the candidates will appear here, grouped by how they line up
-                    with what you chose.
+                    Everyone running is listed below, grouped by the office they seek. Answer a question above
+                    and each name will show where they line up with what you chose.
                 </p>
             ) : (
                 <>
                     <p class="count" aria-live="polite">
-                        {answeredCount} of {QUESTIONS.length} answered · covering{" "}
-                        {officeList(results.offices)}
+                        {answeredCount} of {QUESTIONS.length} answered
                     </p>
                     <label class="match-hide">
                         <input
@@ -302,26 +300,28 @@ export function MatchPage() {
                         />
                         Hide candidates with no stated position
                     </label>
-
-                    {groups.map((g) =>
-                        g.rows.length === 0 || (g.key === "unknown" && hideUnknown) ? null : (
-                            <section class="match-group" key={g.key}>
-                                <h3 class={`match-group-title match-group-${g.key}`}>
-                                    {g.title}{" "}
-                                    <span class="match-count">
-                                        {g.rows.length} candidate{g.rows.length === 1 ? "" : "s"}
-                                    </span>
-                                </h3>
-                                <ul class="match-list">
-                                    {g.rows.map((row) => (
-                                        <MatchRow key={row.candidate.id} row={row} onOpen={setOpenId} />
-                                    ))}
-                                </ul>
-                            </section>
-                        ),
-                    )}
                 </>
             )}
+
+            {sections.map(({ office, lines }) => (
+                <section class="match-group" key={office.id} aria-label={office.title}>
+                    <h3 class="match-group-title">
+                        {office.title}{" "}
+                        <span class="match-count">
+                            {office.voteFor} · {lines.length} candidate{lines.length === 1 ? "" : "s"}
+                        </span>
+                    </h3>
+                    {lines.length === 0 ? (
+                        <p class="empty">No candidates to show with these settings.</p>
+                    ) : (
+                        <ul class="match-list">
+                            {lines.map((line) => (
+                                <CandidateRow key={line.candidate.id} line={line} onOpen={setOpenId} />
+                            ))}
+                        </ul>
+                    )}
+                </section>
+            ))}
 
             {selected && <CandidatePanel candidate={selected} onClose={() => setOpenId(null)} />}
         </>

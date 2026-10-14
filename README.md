@@ -17,8 +17,8 @@ npm run dev      # watch-rebuild; serve dist/ with e.g. python3 -m http.server -
 npm run check    # tsc --noEmit
 ```
 
-Open `dist/index.html` via any static server. Routes: `#/` home, `#/office/:mayor|council|park|school`,
-`#/c/:candidate-id`, `#/methodology`.
+Open `dist/index.html` via any static server. Routes: `#/` home, `#/match` find
+candidates, `#/shortlist` shortlist, `#/c/:candidate-id`, `#/methodology`.
 
 ## Candidate pages
 
@@ -43,15 +43,15 @@ say". They are not the guide's view, and candidates are not scored or ranked.
 lists the positions that exist in the sources, the slate ids that state each side (`slatesA` /
 `slatesB`), and any mayor whose own platform states one (`candidatesA` / `candidatesB`). Mayors are
 read from their own platform and never fall back to a slate. Everyone else is read from their slate.
-A stance we cannot source is `"none"`, which lands the candidate in the "no stated position" group —
-never in "disagrees". Results are grouped by agreement with the reader's own answers and sorted by
-ballot number. The finder is not a score or a ranking; keep it that way.
+A stance we cannot source is `"none"`, which shows as "no stated position" — never as disagreement.
+Every candidate is listed under the office they seek, in ballot order, with agree/disagree notes once
+the reader answers. Readers star names into a shortlist (`src/shortlist.ts`, persisted to
+localStorage, shown at `#/shortlist` grouped by office). The finder is not a score or a ranking; keep
+it that way.
 
-Mayor pages use the full profile. Council, park and school races have too many candidates for that, so
-`OfficePage` shows a paginated table (`PAGE_SIZE`, 10 rows) with an "In short" column. Selecting a row
-opens `CandidatePanel` (a `dialog.claim-panel` drawer) with the candidate's record and, where we have
-no individual analysis, the shared slate positions from `SLATES`. Keep panel copy short: two bullets
-per side, one clause each.
+Selecting a candidate opens `CandidatePanel` (a `dialog.claim-panel` drawer) with the candidate's
+record and, where we have no individual analysis, the shared slate positions from `SLATES`. Keep panel
+copy short: two bullets per side, one clause each.
 
 Write for a general reader: one idea per sentence, active voice, present tense, no unexplained
 jargon. Define a term the first time it appears, and keep sentences under about 25 words. Prefer a

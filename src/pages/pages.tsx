@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { CANDIDATES, candidateById, candidatesForOffice } from "../data/index.js";
+import { useEffect, useRef } from "preact/hooks";
+import { CANDIDATES, candidateById } from "../data/index.js";
 import { ELECTION, OFFICES, SLATES } from "../data/election.js";
-import { candidateHref, officeHref } from "../router.js";
+import { candidateHref, matchHref } from "../router.js";
 import { BackLink } from "../components/navigation.tsx";
 import { Badge, SourceLink } from "../components/ui.tsx";
-import type { Candidate, OfficeId, PlatformItem, Slate } from "../data/types.js";
+import type { Candidate, PlatformItem, Slate } from "../data/types.js";
 
 export function HomePage() {
     return (
@@ -13,18 +13,22 @@ export function HomePage() {
             <h1>{ELECTION.title}</h1>
             <p class="lede">
                 <strong>{ELECTION.votingDay}.</strong> Advance voting {ELECTION.advanceVoting.join(" · ")}.
-                What each of the {CANDIDATES.length} candidates promises, and what holds up.
+                Answer a few questions about what matters to you, see how each of the {CANDIDATES.length}{" "}
+                candidates lines up, and star the ones you want to keep.
             </p>
-            <h2>Offices</h2>
             <div class="cards">
-                {OFFICES.map((o) => (
-                    <a key={o.id} class="card" href={officeHref(o.id)}>
-                        <strong>
-                            {o.title} <span class="count">{o.voteFor}</span>
-                        </strong>
-                        <div class="card-meta">{o.description}</div>
-                    </a>
-                ))}
+                <a class="card" href={matchHref()}>
+                    <strong>Find candidates</strong>
+                    <div class="card-meta">
+                        Pick the positions you back, skip the rest, and browse everyone running by office.
+                    </div>
+                </a>
+                <a class="card" href="#/shortlist">
+                    <strong>Your shortlist</strong>
+                    <div class="card-meta">
+                        The names you starred, grouped by office, saved on this device.
+                    </div>
+                </a>
             </div>
             <h2>Party platforms</h2>
             <p>The shared commitments that slate candidates run on.</p>
@@ -73,148 +77,7 @@ function slateFor(party: string) {
     return SLATES.find((s) => s.name === party || s.id === SLATE_ALIASES[party]);
 }
 
-/** One line for the office table: what this candidate runs on. */
-function rowGist(c: Candidate): string {
-    if (c.gist) return c.gist;
-    const slate = slateFor(c.party);
-    if (slate) return slate.pillars.map((p) => p.title).join(" · ");
-    return "No shared platform on file";
-}
-
-const PAGE_SIZE = 10;
-
-export function OfficePage({ office }: { office: OfficeId }) {
-    const meta = OFFICES.find((o) => o.id === office)!;
-    const rows = candidatesForOffice(office);
-    const [query, setQuery] = useState("");
-    const [party, setParty] = useState("all");
-    const [page, setPage] = useState(0);
-    const [openId, setOpenId] = useState<string | null>(null);
-
-    const parties = useMemo(() => [...new Set(rows.map((c) => c.party))].sort(), [rows]);
-
-    const filtered = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        return rows.filter(
-            (c) =>
-                (party === "all" || c.party === party) &&
-                (!q || c.name.toLowerCase().includes(q) || String(c.ballot).includes(q)),
-        );
-    }, [rows, query, party]);
-
-    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-    const current = Math.min(page, totalPages - 1);
-    const start = current * PAGE_SIZE;
-    const pageRows = filtered.slice(start, start + PAGE_SIZE);
-    const selected = openId ? (rows.find((c) => c.id === openId) ?? null) : null;
-
-    return (
-        <>
-            <BackLink href="#/">Home</BackLink>
-            <p class="eyebrow">{meta.voteFor}</p>
-            <h1>{meta.title}</h1>
-            <p>{meta.description}</p>
-            <div class="filters">
-                <input
-                    type="search"
-                    placeholder={`Search ${meta.title} candidates…`}
-                    aria-label={`Search ${meta.title} candidates`}
-                    value={query}
-                    onInput={(e) => {
-                        setQuery((e.target as HTMLInputElement).value);
-                        setPage(0);
-                    }}
-                />
-                <select
-                    aria-label="Filter by slate or affiliation"
-                    value={party}
-                    onChange={(e) => {
-                        setParty((e.target as HTMLSelectElement).value);
-                        setPage(0);
-                    }}
-                >
-                    <option value="all">All slates</option>
-                    {parties.map((p) => (
-                        <option key={p} value={p}>
-                            {p}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <p class="count" aria-live="polite">
-                {filtered.length === 0
-                    ? "No candidates match."
-                    : `Showing ${start + 1}–${start + pageRows.length} of ${filtered.length}`}
-            </p>
-            <div
-                class="candidate-table-wrap"
-                role="region"
-                aria-label={`${meta.title} candidates`}
-                tabIndex={0}
-            >
-                <table class="candidate-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Candidate</th>
-                            <th scope="col">Slate / affiliation</th>
-                            <th scope="col">In short</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {pageRows.map((c) => (
-                            <tr key={c.id} class="candidate-row" onClick={() => setOpenId(c.id)}>
-                                <td>{c.ballot}</td>
-                                <td>
-                                    <button type="button" class="row-open" aria-haspopup="dialog">
-                                        {c.name}
-                                    </button>
-                                </td>
-                                <td>{c.party}</td>
-                                <td class="row-gist">{rowGist(c)}</td>
-                                <td class="row-status">
-                                    {c.incumbent && <Badge tone="partial">Incumbent</Badge>}
-                                    {c.analysis.reviewed ? (
-                                        <Badge tone="aligned">Reviewed</Badge>
-                                    ) : (
-                                        <Badge tone="noev">Not reviewed</Badge>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                        {pageRows.length === 0 && (
-                            <tr>
-                                <td colSpan={5}>No candidates match this search.</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-            {totalPages > 1 && (
-                <nav class="pagination" aria-label="Candidate pages">
-                    <button type="button" disabled={current === 0} onClick={() => setPage(current - 1)}>
-                        ← Previous
-                    </button>
-                    <span aria-live="polite">
-                        Page {current + 1} of {totalPages}
-                    </span>
-                    <button
-                        type="button"
-                        disabled={current >= totalPages - 1}
-                        onClick={() => setPage(current + 1)}
-                    >
-                        Next →
-                    </button>
-                </nav>
-            )}
-            <p class="table-note">Select a candidate for their record and what their slate stands for.</p>
-            {selected && <CandidatePanel candidate={selected} onClose={() => setOpenId(null)} />}
-        </>
-    );
-}
-
-/** Side panel with a brief profile. Opens from a row in the office table. */
+/** Side panel with a brief profile. Opens from a candidate row. */
 export function CandidatePanel({ candidate, onClose }: { candidate: Candidate; onClose: () => void }) {
     const ref = useRef<HTMLDialogElement>(null);
     useEffect(() => {
@@ -417,12 +280,12 @@ export function CandidatePage({ id }: { id: string }) {
                 Candidate not found. <a href="#/">Back to home</a>.
             </p>
         );
-    const office = OFFICES.find((o) => o.id === c.office)!;
+    const officeMeta = OFFICES.find((o) => o.id === c.office)!;
     const { analysis } = c;
     const status = c.incumbentDetail ?? (c.incumbent ? "Incumbent" : "Challenger");
     return (
         <>
-            <BackLink href={officeHref(c.office)}>{office.title}</BackLink>
+            <BackLink href={matchHref()}>Find candidates</BackLink>
             <h1>{c.name}</h1>
             <p class="lede">{analysis.summary}</p>
 
@@ -430,7 +293,7 @@ export function CandidatePage({ id }: { id: string }) {
                 <div>
                     <dt>Office</dt>
                     <dd>
-                        {office.title} — {office.voteFor}
+                        {officeMeta.title} — {officeMeta.voteFor}
                     </dd>
                 </div>
                 <div>
@@ -534,11 +397,16 @@ export function MethodologyPage() {
 
             <h2>The candidate finder</h2>
             <p>
-                The finder asks about issues where candidates have stated a position, then groups candidates
-                by how those positions line up with your answers. For mayor we read the candidate's own
-                platform. Everywhere else the position belongs to their slate, not to the candidate
-                personally. When we find no position, the candidate goes in the "no stated position" group.
-                That is a gap in our information, never a disagreement.
+                The finder asks about issues where candidates have stated a position. Answer the ones you care
+                about and skip the rest. Every candidate is listed under the office they seek, in ballot
+                order, with a note on where they line up with your answers. For mayor we read the candidate's
+                own platform. Everywhere else the position belongs to their slate, not to the candidate
+                personally. When we find no position, the candidate shows "no stated position". That is a gap
+                in our information, never a disagreement.
+            </p>
+            <p>
+                Star the names you want to keep and they are saved on your device under Shortlist, grouped by
+                office. The shortlist never leaves your browser.
             </p>
 
             <h2>Corrections</h2>
