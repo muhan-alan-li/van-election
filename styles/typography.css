@@ -1,0 +1,9 @@
+/* Google Fonts supplies Atkinson Hyperlegible for all site text. */
+:root {
+    --sans: "Atkinson Hyperlegible", sans-serif;
+    --body: var(--sans);
+    --body-size: 17px;
+}
+[hidden] {
+    display: none !important;
+}
