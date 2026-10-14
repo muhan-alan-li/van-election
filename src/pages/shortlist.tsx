@@ -27,9 +27,7 @@ export function ShortlistPage() {
                 </p>
             ) : (
                 <>
-                    <p class="lede">
-                        {shortlisted.length} saved on this device. Select a name for details.
-                    </p>
+                    <p class="lede">{shortlisted.length} saved on this device. Select a name for details.</p>
                     <p>
                         <button type="button" class="match-clear" onClick={clearShortlist}>
                             Clear the whole shortlist
