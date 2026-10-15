@@ -95,8 +95,12 @@ export function CandidatePanel({ candidate, onClose }: { candidate: Candidate; o
                 <span>
                     Ballot #{candidate.ballot} · {office.title} · {candidate.party}
                 </span>
-                <button type="button" onClick={() => ref.current?.close()}>
-                    Close ✕
+                <button
+                    type="button"
+                    aria-label={`Close ${candidate.name} details`}
+                    onClick={() => ref.current?.close()}
+                >
+                    Close <span aria-hidden="true">✕</span>
                 </button>
             </div>
 

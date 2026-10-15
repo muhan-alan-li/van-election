@@ -295,11 +295,11 @@ export function MatchPage() {
                         <button
                             type="button"
                             class="quiz-btn quiz-next"
-                            onClick={() =>
-                                document
-                                    .getElementById("match-results")
-                                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
-                            }
+                            onClick={() => {
+                                const el = document.getElementById("match-results");
+                                el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                el?.focus({ preventScroll: true });
+                            }}
                         >
                             Show candidates ↓
                         </button>
@@ -307,7 +307,9 @@ export function MatchPage() {
                 )}
             </section>
 
-            <h2 id="match-results">Candidates by office</h2>
+            <h2 id="match-results" tabIndex={-1}>
+                Candidates by office
+            </h2>
             <p class="count">
                 You can vote for more than one person in most races — the ballot line tells you how many.
                 Silence means “no stated position”, never disagreement.

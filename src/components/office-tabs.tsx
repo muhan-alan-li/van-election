@@ -34,6 +34,14 @@ export function OfficeTabs({
                 } else if (e.key === "ArrowLeft") {
                     e.preventDefault();
                     move(-1);
+                } else if (e.key === "Home") {
+                    e.preventDefault();
+                    onChange(tabs[0].id);
+                    document.getElementById(`office-tab-${tabs[0].id}`)?.focus();
+                } else if (e.key === "End") {
+                    e.preventDefault();
+                    onChange(tabs[tabs.length - 1].id);
+                    document.getElementById(`office-tab-${tabs[tabs.length - 1].id}`)?.focus();
                 }
             }}
         >

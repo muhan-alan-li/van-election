@@ -16,17 +16,31 @@ export function App() {
     }, []);
     useLayoutEffect(() => {
         document.documentElement.dataset.view = route.view;
+        const titles: Record<Route["view"], string> = {
+            home: "Vancouver 2026 Election — Platforms and Analysis",
+            match: "Find candidates — Vancouver 2026 Election",
+            candidate: "Candidate profile — Vancouver 2026 Election",
+            platforms: "Party platforms — Vancouver 2026 Election",
+            shortlist: "Your shortlist — Vancouver 2026 Election",
+        };
+        document.title = titles[route.view];
         window.scrollTo(0, 0);
+        document.getElementById("app")?.focus({ preventScroll: true });
     }, [route]);
     return (
         <>
+            <a class="skip-link" href="#app">
+                Skip to content
+            </a>
             <header class="top">
                 <div class="topwrap">
-                    <div class="brand">Vancouver Election ’26</div>
+                    <a class="brand" href="#/">
+                        Vancouver Election ’26
+                    </a>
                     <Navigation route={route} />
                 </div>
             </header>
-            <main id="app" class="shell">
+            <main id="app" class="shell" tabIndex={-1}>
                 {route.view === "candidate" ? (
                     <CandidatePage key={route.id} id={route.id} />
                 ) : route.view === "match" ? (

@@ -3,7 +3,8 @@ import type { ComponentChildren } from "preact";
 export function SourceLink({ href, children }: { href: string; children: ComponentChildren }) {
     return (
         <a href={href} target="_blank" rel="noopener noreferrer">
-            {children} <span aria-label="opens in a new tab">↗</span>
+            {children} <span aria-hidden="true">↗</span>
+            <span class="sr-only">(opens in a new tab)</span>
         </a>
     );
 }
