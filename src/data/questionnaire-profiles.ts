@@ -11,7 +11,7 @@ export interface QuestionnaireProfile {
 function councilPlatform(c: Candidate): PlatformItem[] {
     if (c.office !== "council") return [];
     const slate = SLATES.find((s) => s.name === c.party || (s.id === "onecity" && c.party === "OneCity"));
-    if (slate && !slate.sourceUrl.startsWith("https://vancouver.ca/"))
+    if (slate)
         return slate.pillars.map((p) => ({
             title: p.title,
             detail: p.detail,
@@ -63,8 +63,8 @@ export function withQuestionnaireProfile(c: Candidate): Candidate {
         extra?.summary ??
         (hadIndividual
             ? c.analysis.summary
-            : hasIndividual
-              ? `${c.name} ${personal!.detail[0].toLowerCase()}${personal!.detail.slice(1)}`
+            : hasIndividual && personal
+              ? `${personal.title}: ${personal.detail}`
               : `${c.party}'s shared commitments are shown below. No separate personal policy response was found in the sources reviewed.`);
 
     return {
@@ -72,7 +72,7 @@ export function withQuestionnaireProfile(c: Candidate): Candidate {
         platform,
         furtherReading,
         gist: summary,
-        website: c.website ?? platform[0].sourceUrl,
+        website: c.website,
         analysis: {
             ...c.analysis,
             summary,

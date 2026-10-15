@@ -21,6 +21,8 @@ export function PlatformsPage({ id }: { id?: string }) {
                 <p class="lede">{slate.summary}</p>
                 <p class="src">
                     <SourceLink href={slate.sourceUrl}>Platform source</SourceLink>
+                    {(slate.id === "onecity" || slate.id === "cope") &&
+                        " — published detail in the reviewed sources is limited; check the party page and candidate cards."}
                 </p>
                 <h2>Shared commitments</h2>
                 <p>These are the shared commitments that the party’s candidates run on.</p>

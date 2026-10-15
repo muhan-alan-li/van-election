@@ -336,8 +336,8 @@ export const SLATES: Slate[] = [
         id: "onecity",
         name: "OneCity Vancouver",
         summary:
-            "Strengthen renter protections, build housing for all incomes, and put homes near transit to cut emissions.",
-        website: "https://vancouver.ca/plan-your-vote/index.aspx",
+            "Strengthen renter protections, build housing for all incomes, and put homes near transit to cut emissions. Published platform detail in the sources reviewed is limited.",
+        website: "https://www.onecityvancouver.ca/",
         running: { council: 5, park: 3, school: 5 },
         pillars: [
             {
@@ -365,13 +365,14 @@ export const SLATES: Slate[] = [
                 detail: "Put homes near transit and services, and use transport policy to cut emissions.",
             },
         ],
-        sourceUrl: "https://vancouver.ca/plan-your-vote/index.aspx",
+        sourceUrl: "https://www.onecityvancouver.ca/",
     },
     {
         id: "cope",
         name: "COPE",
-        summary: "Protect tenants, improve transit access, and fund community food programs.",
-        website: "https://vancouver.ca/plan-your-vote/index.aspx",
+        summary:
+            "Protect tenants, improve transit access, and fund community food programs. Published platform detail in the sources reviewed is limited.",
+        website: "https://www.votecope.ca/the-cope-team",
         running: { council: 4, park: 4, school: 4 },
         pillars: [
             {
@@ -387,6 +388,6 @@ export const SLATES: Slate[] = [
                 detail: "Protect tenants, improve transit access, and fund community food programs.",
             },
         ],
-        sourceUrl: "https://vancouver.ca/plan-your-vote/index.aspx",
+        sourceUrl: "https://www.votecope.ca/the-cope-team",
     },
 ];

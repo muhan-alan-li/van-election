@@ -810,7 +810,7 @@ export function withBoardProfile(c: Candidate): Candidate {
     if (platform.length === 0) return c;
     return {
         ...c,
-        website: individual?.website ?? platform[0].sourceUrl,
+        website: individual?.website ?? c.website,
         platform,
         gist: individual?.summary ?? shared!.summary,
         analysis: {
