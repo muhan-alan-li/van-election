@@ -149,7 +149,8 @@ html:has(.claim-panel[open]) {
     color: var(--ink3);
 }
 .claim-panel-toolbar button {
-    padding: 6px 0 6px 12px;
+    padding: 10px 0 10px 12px;
+    min-height: 44px;
     background: none;
     border: 0;
     color: var(--link);
@@ -547,7 +548,8 @@ html:has(.claim-panel[open]) {
     line-height: 1.5;
 }
 .match-clear {
-    padding: 6px 0 0;
+    padding: 10px 0;
+    min-height: 44px;
     background: none;
     border: 0;
     color: var(--link);
@@ -576,7 +578,8 @@ html:has(.claim-panel[open]) {
     margin: 16px 0 4px;
 }
 .office-tab {
-    padding: 8px 14px;
+    padding: 10px 16px;
+    min-height: 44px;
     border: 1px solid var(--line2);
     border-radius: 999px;
     background: var(--bg);
@@ -722,6 +725,13 @@ html:has(.claim-panel[open]) {
 }
 
 /* Columns sit side by side; stack them only when the card gets narrow. */
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .quiz-progress-fill,
+    .match-row-name {
+        transition: none;
+    }
+}
 @media (max-width: 560px) {
     .match-yn {
         grid-template-columns: 1fr;
