@@ -159,12 +159,8 @@ export function CandidatePanel({ candidate, onClose }: { candidate: Candidate; o
                         <SourceLink href={s.url}>{s.label}</SourceLink>
                     </span>
                 ))}
-                {analysis.reviewed && (
-                    <>
-                        {" · "}
-                        <a href={candidateHref(candidate.id)}>Full profile</a>
-                    </>
-                )}
+                {" · "}
+                <a href={candidateHref(candidate.id)}>Full profile</a>
             </p>
         </dialog>
     );

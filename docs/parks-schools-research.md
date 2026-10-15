@@ -1,5 +1,11 @@
 # Parks and schools: quick source review
 
+> Superseded counts: this was a limited discovery pass. Final coverage is 88 individual
+> profiles (7 mayor, 39 council, 22 park, 20 school), 37 shared-only profiles, and 5 basic
+> entries — see `docs/profile-coverage.md` and `src/data/election.ts`. The “18 parks + 10
+> school / 38 shared-only” numbers in the October 14 update below describe the board-profile
+> stage only.
+
 Checked October 14, 2026. This is a limited discovery pass, not a complete review
 of all 35 Park Board and 31 school trustee candidates. Sources below contain
 campaign promises and candidate statements; historical claims and delivery costs

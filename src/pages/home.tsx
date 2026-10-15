@@ -8,7 +8,8 @@ export function HomePage() {
         <>
             <h1>{ELECTION.title}</h1>
             <p class="lede">
-                <strong>{ELECTION.votingDay}.</strong>
+                <strong>{ELECTION.votingDay}.</strong> {CANDIDATES.length} candidates running across 4 offices
+                — compare what each one promises, with links to sources.
             </p>
             <div class="cards">
                 <a class="card" href={matchHref()}>
@@ -46,6 +47,16 @@ export function HomePage() {
                     </SourceLink>
                 </li>
             </ul>
+            <h2>How this guide works</h2>
+            <p>
+                This guide does not score or rank candidates. Arguments for and against are what people in
+                this campaign say, not this guide’s view.
+            </p>
+            <p>{ELECTION.coverageNote}</p>
+            <p>
+                <Badge tone="noev">Shared party commitment</Badge> means the promise comes from the slate.
+                Silence in our sources shows as “no stated position” — never as disagreement.
+            </p>
         </>
     );
 }

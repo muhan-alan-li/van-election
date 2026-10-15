@@ -1,6 +1,7 @@
 /** The two sides of an issue. Both keep the same visual weight. */
 export function Arguments({ forArgs, against }: { forArgs: string[]; against: string[] }) {
-    if (forArgs.length === 0 && against.length === 0) return null;
+    if (forArgs.length === 0 && against.length === 0)
+        return <p class="count">Trade-offs not yet reviewed in the sources checked.</p>;
     return (
         <div class="arg-cols">
             {forArgs.length > 0 && (

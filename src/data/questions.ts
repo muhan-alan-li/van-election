@@ -287,7 +287,7 @@ export const QUESTIONS: Question[] = [
             detail: "You would rather the city spent the money on upkeep.",
         },
         for: ["More park space improves life in growing neighbourhoods."],
-        against: [],
+        against: ["Buying land for parks costs money the city may not have."],
         slatesA: ["team"],
         offices: ["park"],
         note: "Park space depends on land the city already owns or can buy.",

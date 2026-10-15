@@ -113,6 +113,15 @@ function QuestionCard({
                     </span>
                 ))}
             </p>
+            <p>
+                {picked !== undefined ? (
+                    <button type="button" class="match-clear" onClick={() => onToggle(picked)}>
+                        Clear answer — leave this question blank
+                    </button>
+                ) : (
+                    <span class="count">You can leave this question blank.</span>
+                )}
+            </p>
         </fieldset>
     );
 }
@@ -192,8 +201,11 @@ export function MatchPage() {
 
     return (
         <>
-            <h1>What matters to you?</h1>
-            <p class="lede">Feel free to leave any questions blank, or revisit later.</p>
+            <h1>Find candidates</h1>
+            <p class="lede">
+                What matters to you? Pick the positions you back — feel free to leave any questions blank, or
+                revisit later.
+            </p>
 
             <section id="match-quiz" aria-label="Questions">
                 {!reviewing && current ? (
@@ -296,6 +308,10 @@ export function MatchPage() {
             </section>
 
             <h2 id="match-results">Candidates by office</h2>
+            <p class="count">
+                You can vote for more than one person in most races — the ballot line tells you how many.
+                Silence means “no stated position”, never disagreement.
+            </p>
             {answeredCount === 0 ? (
                 <p class="empty">
                     Everyone running is listed below by office. Answer above to see who aligns with you.
@@ -305,13 +321,16 @@ export function MatchPage() {
                     <p class="count" aria-live="polite">
                         {answeredCount} of {QUESTIONS.length} answered
                     </p>
-                    <label class="match-hide">
+                    <label
+                        class="match-hide"
+                        title="Candidates you have not answered any relevant question for will still be listed."
+                    >
                         <input
                             type="checkbox"
                             checked={hideUnknown}
                             onChange={(e) => setHideUnknown((e.target as HTMLInputElement).checked)}
                         />
-                        Hide candidates with no stated position
+                        Hide candidates with no stated position on answered issues
                     </label>
                 </>
             )}

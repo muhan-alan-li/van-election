@@ -43,8 +43,9 @@ export function App() {
                 <div class="in">
                     <p>
                         Independent voter guide for the October 17, 2026 election. Arguments for and against
-                        are what people in this campaign say. Coverage is partial, so check the linked sources
-                        before you vote.
+                        are what people in this campaign say. Research closed October 14, 2026 and does not
+                        reflect late changes. Coverage is partial, so check the linked sources before you
+                        vote.
                     </p>
                 </div>
             </footer>

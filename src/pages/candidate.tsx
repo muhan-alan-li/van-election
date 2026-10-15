@@ -52,7 +52,8 @@ export function CandidatePage({ id }: { id: string }) {
                 <div>
                     <dt>Office</dt>
                     <dd>
-                        {officeMeta.title} — {officeMeta.voteFor}
+                        {officeMeta.title} — {officeMeta.voteFor}. You may pick up to {officeMeta.seats}{" "}
+                        {officeMeta.seats === 1 ? "person" : "people"} in this race.
                     </dd>
                 </div>
                 <div>
@@ -94,6 +95,11 @@ export function CandidatePage({ id }: { id: string }) {
                     </div>
                 )}
             </dl>
+            <p class="count">
+                Reviewed means we read the linked sources. Shared party commitment means the promise comes
+                from the slate, not the person. Limited information means no individual policy detail was
+                found. Silence means “no stated position”, never disagreement.
+            </p>
 
             {analysis.reviewed ? (
                 <>
